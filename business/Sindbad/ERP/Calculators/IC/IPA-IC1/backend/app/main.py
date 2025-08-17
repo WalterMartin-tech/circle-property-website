@@ -10,7 +10,7 @@ import io
 from openpyxl import Workbook
 from reportlab.pdfgen import canvas
 import os
-from app.engine import run_calc, Inputs
+from app.ipa_engine.engine import run_calc, Inputs
 from app.equilibrium import solve_equilibrium_principal
 from .calculator import compute
 
