@@ -1,0 +1,3 @@
+A	CHANGES/20250817_141200.txt
+D	business/Sindbad/ERP/Calculators/IC/IPA-IC1/backend/package-lock.json
+D	business/Sindbad/ERP/Calculators/IC/IPA-IC1/backend/package.json
