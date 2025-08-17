@@ -1,0 +1,31 @@
+A	CHANGES/20250817_143505.txt
+R100	business/Sindbad/ERP/Calculators/IC/IPA-IC1/backend/Dockerfile.tmp	business/Sindbad/ERP/Calculators/IC/IPA-IC1/_trash_20250817_150550/Dockerfile.tmp
+R100	business/Sindbad/ERP/Calculators/IC/IPA-IC1/backend/Procfile 2	business/Sindbad/ERP/Calculators/IC/IPA-IC1/_trash_20250817_150550/Procfile 2
+R100	business/Sindbad/ERP/Calculators/IC/IPA-IC1/backend/app.py	business/Sindbad/ERP/Calculators/IC/IPA-IC1/_trash_20250817_150550/app.py
+R100	business/Sindbad/ERP/Calculators/IC/IPA-IC1/backend/jsconfig.json	business/Sindbad/ERP/Calculators/IC/IPA-IC1/_trash_20250817_150550/jsconfig.json
+R100	business/Sindbad/ERP/Calculators/IC/IPA-IC1/backend/main.py	business/Sindbad/ERP/Calculators/IC/IPA-IC1/_trash_20250817_150550/main.py
+R100	business/Sindbad/ERP/Calculators/IC/IPA-IC1/backend/next.config.js	business/Sindbad/ERP/Calculators/IC/IPA-IC1/_trash_20250817_150550/next.config.js
+R100	business/Sindbad/ERP/Calculators/IC/IPA-IC1/backend/pyproject 2.toml	business/Sindbad/ERP/Calculators/IC/IPA-IC1/_trash_20250817_150550/pyproject 2.toml
+R100	business/Sindbad/ERP/Calculators/IC/IPA-IC1/backend/pytest 2.ini	business/Sindbad/ERP/Calculators/IC/IPA-IC1/_trash_20250817_150550/pytest 2.ini
+R100	business/Sindbad/ERP/Calculators/IC/IPA-IC1/backend/runtime 2.txt	business/Sindbad/ERP/Calculators/IC/IPA-IC1/_trash_20250817_150550/runtime 2.txt
+D	business/Sindbad/ERP/Calculators/IC/IPA-IC1/backend/main.py.bak
+D	business/Sindbad/ERP/Calculators/IC/IPA-IC1/backend/next-env.d 3.ts
+D	business/Sindbad/ERP/Calculators/IC/IPA-IC1/backend/next-env.d.ts
+D	business/Sindbad/ERP/Calculators/IC/IPA-IC1/backend/public/v11.4/ipa-calculator-ivc-v11-4.html
+D	business/Sindbad/ERP/Calculators/IC/IPA-IC1/backend/public/v11.4/ipa-calculator-ivc-v11-4.html.bak.20250815_143352
+D	business/Sindbad/ERP/Calculators/IC/IPA-IC1/backend/public/v11.5/ipa-calculator-ivc-v11-5.html
+D	business/Sindbad/ERP/Calculators/IC/IPA-IC1/backend/public/v11.5/ipa-calculator-ivc-v11-5.html.bak
+D	business/Sindbad/ERP/Calculators/IC/IPA-IC1/backend/public/v11.5/ipa-calculator-ivc-v11-5.html.bak.1755273816
+D	business/Sindbad/ERP/Calculators/IC/IPA-IC1/backend/public/v11.5/ipa-calculator-ivc-v11-5.html.bak.1755275315
+D	business/Sindbad/ERP/Calculators/IC/IPA-IC1/backend/public/v11.5/ipa-calculator-ivc-v11-5.html.bak_1755270279
+D	business/Sindbad/ERP/Calculators/IC/IPA-IC1/backend/public/v11.5/ipa-calculator-ivc-v11-5.html.bak_1755271675
+D	business/Sindbad/ERP/Calculators/IC/IPA-IC1/backend/public/v11.5/ipa-calculator-ivc-v11-5.html.bak_1755271974
+D	business/Sindbad/ERP/Calculators/IC/IPA-IC1/backend/public/v11.5/ipa-calculator-ivc-v11-5.html.bak_20250815_185629
+D	business/Sindbad/ERP/Calculators/IC/IPA-IC1/backend/public/v11.5/ipa-calculator-ivc-v11-5.html.bak_20250815_185703
+D	business/Sindbad/ERP/Calculators/IC/IPA-IC1/backend/public/v11.5/ipa-calculator-ivc-v11-5.html.bak_tsf_1755270985
+D	business/Sindbad/ERP/Calculators/IC/IPA-IC1/backend/public/v11.5/ivc-hotfix-v115-5.css
+D	business/Sindbad/ERP/Calculators/IC/IPA-IC1/backend/public/v11.5/ivc-hotfix-v115-5.js
+D	business/Sindbad/ERP/Calculators/IC/IPA-IC1/backend/tests/cases/example_case 2.json
+D	business/Sindbad/ERP/Calculators/IC/IPA-IC1/backend/tests/test_calculate_shape 2.py
+D	business/Sindbad/ERP/Calculators/IC/IPA-IC1/backend/tests/test_golden_example 2.py
+D	business/Sindbad/ERP/Calculators/IC/IPA-IC1/backend/tests/test_health 2.py
