@@ -72,3 +72,13 @@
 
   console.debug(MARK, 'applied');
 })();
+
+// --- v11.5: TEE defaults ---
+document.addEventListener('DOMContentLoaded', () => {
+  const tee = document.querySelector('#teeToggle, input[name="tee"], #tee');
+  if (tee) tee.checked = false;
+
+  // Remove any TEE row accidentally placed in insurance
+  const teeInInsurance = document.querySelector('#insurance-section .tee-row, #insurance-section .tee-toggle');
+  if (teeInInsurance) teeInInsurance.remove();
+});
