@@ -1,0 +1,16 @@
+A	CHANGES/20250817_134903.txt
+D	business/Sindbad/ERP/Calculators/IC/IPA-IC1/backend/app/__init__ 2.py
+D	business/Sindbad/ERP/Calculators/IC/IPA-IC1/backend/app/calculator 2.py
+D	business/Sindbad/ERP/Calculators/IC/IPA-IC1/backend/app/engine 2.py
+D	business/Sindbad/ERP/Calculators/IC/IPA-IC1/backend/app/equilibrium.py.bak.1755220635
+D	business/Sindbad/ERP/Calculators/IC/IPA-IC1/backend/app/layout.tsx
+D	business/Sindbad/ERP/Calculators/IC/IPA-IC1/backend/app/main 2.py
+D	business/Sindbad/ERP/Calculators/IC/IPA-IC1/backend/app/main.py.bak.20250814_222402
+D	business/Sindbad/ERP/Calculators/IC/IPA-IC1/backend/app/page.tsx
+D	business/Sindbad/ERP/Calculators/IC/IPA-IC1/backend/app/preview.py.bak.20250815_130513
+D	business/Sindbad/ERP/Calculators/IC/IPA-IC1/backend/app/preview.py.bak.20250815_134017
+D	business/Sindbad/ERP/Calculators/IC/IPA-IC1/backend/app/preview.py.bak.20250815_135100
+D	business/Sindbad/ERP/Calculators/IC/IPA-IC1/backend/app/preview.py.bak.20250815_140900
+D	business/Sindbad/ERP/Calculators/IC/IPA-IC1/backend/app/preview.py.bak.20250815_141816
+D	business/Sindbad/ERP/Calculators/IC/IPA-IC1/backend/app/preview.py.bak.20250815_144617
+A	business/Sindbad/ERP/Calculators/IC/IPA-IC1/frontend/middleware.ts
