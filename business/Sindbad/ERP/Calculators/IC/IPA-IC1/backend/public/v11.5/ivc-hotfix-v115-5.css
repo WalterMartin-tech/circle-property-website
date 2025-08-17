@@ -1,6 +1,0 @@
-/* ivc-hotfix-v115-5 */
-.ivc-hotfix-v115-5 .credit-preview-taller { max-height: none !important; overflow: visible !important; }
-.ivc-hotfix-v115-5 .insurance-as-card { width: 100%; }
-.ivc-hotfix-v115-5 .insurance-as-card .row { display: grid; grid-template-columns: 300px 300px 1fr; gap: 12px; align-items: center; }
-.ivc-hotfix-v115-5 .insurance-as-card input[type="number"],
-.ivc-hotfix-v115-5 .insurance-as-card input[type="text"] { font-variant-numeric: tabular-nums; }
