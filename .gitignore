@@ -1,0 +1,30 @@
+# Node
+node_modules/
+.next/
+dist/
+coverage/
+*.log
+
+# Python
+**/.venv/
+**/__pycache__/
+*.pyc
+*.pyo
+*.pytest_cache/
+.mypy_cache/
+
+# Env & OS
+.env
+.env.*
+.DS_Store
+
+# Build artifacts
+*.sqlite3
+*.db
+*.zip
+*.tar.gz
+*.egg-info/
+
+# Local tooling
+.idea/
+.vscode/
