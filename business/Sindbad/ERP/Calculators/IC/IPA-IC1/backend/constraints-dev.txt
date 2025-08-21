@@ -1,0 +1,8 @@
+-r constraints.txt
+pytest
+black
+isort
+mypy
+
+
+

@@ -1,0 +1,1347 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ivory Coast (UV v13.18 (static))</title>
+  <style>
+    :root{
+      --bg:#f6f7fb; --card:#ffffff; --ink:#111827; --muted:#6b7280; --line:#e5e7eb; --accent:#111; --pill:#f3f4f6; --danger:#b91c1c; --ok:#065f46;
+      --rosa:#ffe4e6; --rosa-text:#c24159;
+      --radius:14px; --pad:14px; --shadow: 0 1px 2px rgba(17,24,39,.04), 0 8px 24px rgba(17,24,39,.06);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji"}
+    .container{max-width:1280px;margin:0 auto;padding:16px}
+
+    /* Header */
+    .header{display:grid; gap:8px; margin-bottom:10px}
+    .titleRow{display:flex; align-items:center; justify-content:space-between}
+    .appTitle{font-weight:800; font-size:24px; letter-spacing:.2px}
+    .subRow{display:flex; align-items:center; gap:8px; flex-wrap:wrap}
+    .tag{font-size:12px; padding:6px 10px; border-radius:999px; background:var(--pill); border:1px solid var(--line); color:#374151}
+    .tog{display:inline-flex;align-items:center;gap:8px}
+    .switch{position:relative;width:48px;height:28px;background:#e5e7eb;border-radius:999px;display:inline-block;vertical-align:middle;cursor:pointer}
+    .switch::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:999px;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.15)}
+    .switch.on{background:#111}
+    .switch.on::after{left:23px}
+    .nowrap{white-space:nowrap}
+    .btn{border:1px solid var(--line);background:#111;color:#fff;padding:9px 14px;border-radius:12px;font-weight:700;cursor:pointer}
+    .btn.ghost{background:#fff;color:#111}
+    .btn[disabled]{opacity:.45;cursor:not-allowed}
+
+    /* Layout */
+    .grid{display:grid;grid-template-columns:1.7fr .9fr;gap:12px;align-items:start}
+    .leftcol{display:grid; gap:12px}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+    .card>.head{display:flex;align-items:center;justify-content:space-between;padding:12px var(--pad);border-bottom:1px solid var(--line);}
+    .card>.head h3{margin:0;font-size:13px;text-transform:uppercase;letter-spacing:.25px;color:#4b5563}
+    .card>.body{padding:14px var(--pad) 18px}
+
+    .g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .g3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+
+    label{display:block;font-size:12px;color:#6b7280;margin:6px 0 6px 2px}
+    input[type="text"],input[type="number"],input[type="date"],select,textarea{width:100%;border:1px solid var(--line);border-radius:12px;padding:12px 12px;background:#fff;color:#111;outline:none;font-size:16px}
+    input.num{font-family:"PT Mono","Courier New",ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace; font-variant-numeric: tabular-nums;}
+    #operatorName{font-size:18px}
+    input[readonly]{background:#f9fafb;color:#9ca3af}
+    input.immutable{color:#9ca3af}
+    input::placeholder{color:var(--rosa-text);opacity:.8}
+    .hint{font-size:12px;color:#6b7280}
+    .err{color:var(--danger)}
+
+    .chips{display:flex;gap:6px;flex-wrap:wrap}
+    .chip{padding:5px 9px;border-radius:999px;border:1px solid var(--line);background:#fff;font-weight:700;cursor:pointer; font-size:12px}
+    .chip.active{background:#111;color:#fff;border-color:#111}
+
+    .sidebar{position:sticky;top:12px;display:grid;gap:12px}
+    .stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .stat{border:1px solid var(--line);border-radius:12px;background:#f9fafb;padding:10px}
+    .stat .k{font-size:11px;color:#6b7280;text-transform:uppercase}
+    .stat .v{margin-top:6px;font-weight:800}
+
+    .actions{display:flex;gap:10px;flex-wrap:wrap}
+    .badge{font-size:12px;border-radius:8px;padding:2px 8px;border:1px solid var(--line);background:#f9fafb}
+    .badge.ok{border-color:#10b981;color:#065f46}
+    .badge.warn{border-color:#f59e0b;color:#92400e}
+
+    table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+    thead th{font-size:12px;text-transform:uppercase;color:#6b7280;text-align:left;padding:10px;background:#f9fafb;border-bottom:1px solid var(--line)}
+    tbody td{padding:10px;border-bottom:1px solid var(--line)}
+
+    .row{display:flex;gap:10px;align-items:center}
+
+    /* Print */
+    @media print{
+      body{background:#fff}
+      .header .subRow button,.header .subRow .tog{display:none}
+      .grid{grid-template-columns:1.4fr 1fr}
+      .card{break-inside:avoid}
+      .basement{page-break-before:always}
+    }
+    @media (max-width:1100px){.grid{grid-template-columns:1fr}.sidebar{position:relative;top:auto}}
+
+    /* Tabs styling + basement panels visibility */
+    .tabs{display:flex;gap:8px;margin:8px 0 10px;flex-wrap:wrap}
+    .tab{border:1px solid var(--line);background:#fff;padding:6px 10px;border-radius:8px;cursor:pointer;font-weight:600}
+    .tab[aria-selected="true"]{background:#111;color:#fff;border-color:#111}
+    .basement .panel[aria-hidden="true"]{display:none}
+
+  </style>
+<style>.switch input{appearance:none;position:absolute;opacity:0;width:0;height:0}</style>
+</head>
+<body>
+  <div class="container" data-version="13.11">
+    <div class="header" aria-label="Header">
+      <div class="titleRow">
+        <div class="appTitle">IPA Calculator — Ivory Coast</div>
+        <div>
+          <button class="btn ghost" id="btnAdmin">Admin</button>
+          <button class="btn ghost" id="btnLogout">Logout</button>
+        </div>
+      </div>
+      <div class="subRow">
+        <span class="tag" id="uiVersion">UV v13.18 (static)</span>
+        <span class="tag">Calc Version: <span id="calcVersion" style="color:#9ca3af">1.0.0</span></span>
+        <span class="tag" id="roleTag">Role: Superuser</span>
+        <span class="tag">Vehicles: 12</span>
+        <div class="tog" title="Edit defaults (Superuser only)">
+          <span class="hint">Edit defaults</span>
+          <span class="switch on" id="switch-defaults" role="switch" aria-checked="true" tabindex="0"></span>
+        </div>
+        <div class="tog">
+          <label class="hint" for="selCurrency">Currency</label>
+          <select id="selCurrency"><option value="XOF" selected>XOF</option><option value="USD">USD</option><option value="EUR">EUR</option></select>
+          <label class="hint" for="selLocale">Locale</label>
+          <select id="selLocale"><option value="en-US" selected>English</option><option value="fr-FR">Français</option></select>
+        </div>
+        <button class="btn ghost" id="btnExportXlsx">Export XLSX</button>
+        <button class="btn" id="btnExportPdf">Export PDF</button>
+      </div>
+    </div>
+
+    <div class="grid">
+      <!-- LEFT COLUMN -->
+      <div class="leftcol">
+        <section class="card" aria-labelledby="scnTitle">
+          <div class="head"><h3 id="scnTitle">Scenario Details</h3> <span id="snapshotBadge" class="badge" style="display:none">Snapshot (read-only)</span></div>
+          <div class="body g2" style="padding-bottom:8px">
+            <div><label>Client Company Name</label><input class="num" id="clientName" type="text" placeholder="Enter client" aria-required="true"></div>
+            <div><label>Operator (user)</label><input class="num" id="operatorName" type="text" placeholder="e.g. A. Traoré"></div>
+            <div class="row" style="grid-column:1/-1; justify-content:space-between">
+              <div>
+                <label>Stage</label>
+                <div class="chips" id="stageChips" role="group" aria-label="Stage">
+                  <span class="chip active" role="button" tabindex="0">Pre-contract</span>
+                  <span class="chip" role="button" tabindex="0">Contract</span>
+                  <span class="chip" role="button" tabindex="0">Lifetime</span>
+                </div>
+              </div>
+              <div>
+                <label>Draft status</label>
+                <div class="chips" id="draftChips" role="group" aria-label="Draft status">
+                  <span class="chip active" role="button" tabindex="0">In review</span>
+                  <span class="chip" role="button" tabindex="0">Approved</span>
+                  <span class="chip" role="button" tabindex="0">Rejected</span>
+                </div>
+              </div>
+            </div>
+            <div id="valScenario" class="err" style="grid-column:1/-1;display:none"></div>
+          </div>
+        </section>
+
+        <section class="card" aria-labelledby="assetTitle">
+          <div class="head"><h3 id="assetTitle">Asset & Contract Parameters</h3></div>
+          <div class="body g2" id="assetBox">
+            <div><label>Vehicles (qty)</label><input class="num" id="fleetQty" type="text" value="12" data-format="number2"></div>
+            <div><label>Asset Value (gross)</label><input class="num" id="gross" type="text" placeholder="0" data-format="money"></div>
+            <div><label>VAT Rate (%)</label><input class="num immutable" id="vatRate" type="text" value="18.00" data-format="percent2" readonly data-default></div>
+            <div><label>Asset Value (net)</label><input class="num" id="net" type="text" value="Computed = Gross / (1 + VAT%)" readonly></div>
+            <div><label>VAT Amount</label><input class="num" id="vatAmount" type="text" value="Computed = Gross – Net" readonly></div>
+            <div><label>Client Down PMT (amount)</label><input class="num" id="dpAmount" type="text" placeholder="0" data-format="money"></div>
+            <div><label>Client Down PMT (%)</label><input class="num" id="dpPercent" type="text" placeholder="0.00" data-format="percent2"><div class="hint">Base = Asset Gross (Net+VAT)</div></div>
+            <div><label>Down PMT Due Date</label><input type="date" id="dpDate" min="2025-08-19"></div>
+            <div><label>Asset Delivery Date</label><input type="date" id="deliveryDate" min="2025-08-19"></div>
+            <div><label>Contract Start Date (IPA Start)</label><input type="date" id="startDate" min="2025-08-19"></div>
+            <div><label>Contract Signing Date (IPA)</label><input type="date" id="signDate" min="2025-08-19"></div>
+            <div><label>Planned PMT Date (UPA)</label><input type="date" id="upaDate" min="2025-08-19"></div>
+            <div class="row"><div style="flex:1"><label>Balloon PMT (amount)</label><input class="num" id="balloonAmount" type="text" placeholder="0" data-format="money"></div>
+              <div style="flex:1"><label>Balloon PMT (%)</label><input class="num" id="balloonPercent" type="text" placeholder="0.0" data-format="percent1"></div></div>
+            <div class="row"><div style="flex:1"><label>Balloon PMT Due Date <button id="btnAutoBalloon" class="btn ghost" style="padding:4px 8px;margin-left:6px">Auto</button></label><input type="date" id="balloonDate" min="2025-08-19"></div></div>
+            <div><label>IPA Tenure (months)</label><input class="num" id="tenure" type="text" placeholder="e.g. 36"></div>
+            <div class="row">
+              <div style="flex:1"><label>Grace Period Duration (months)</label><input class="num" id="grace" type="text" value="0"></div>
+              <div><button class="btn ghost" id="btnGraceConfirm" style="display:none;padding:8px 10px">✓ Confirm</button></div>
+            </div>
+            <div id="valAsset" class="err" style="grid-column:1/-1;display:none"></div>
+          </div>
+        </section>
+
+        <section class="card" aria-labelledby="ratesTitle">
+          <div class="head"><h3 id="ratesTitle">Interest Rates</h3></div>
+          <div class="body g2">
+            <div><label>Customer Interest Rate rᶜ (%)</label><input class="num immutable" id="rCustomer" type="text" value="18.00" data-format="percent2" readonly data-default></div>
+            <div><label>Funding Rate rᶠ (%)</label><input class="num immutable" id="rFunding" type="text" value="6.00" data-format="percent2" readonly data-default><div class="hint">Used for internal funding cost, IRC and Banking Fee.</div></div>
+            <div><label>Discounted Rate for payout price (%)</label><input class="num immutable" id="rDiscount" type="text" value="0.00" data-format="percent2" readonly data-default></div>
+          </div>
+        </section>
+
+
+        <section class="card" aria-labelledby="upliftTitle">
+          <div class="head"><h3 id="upliftTitle">First-year uplift</h3></div>
+          <div class="body g3" id="upliftBody">
+            <div style="grid-column:1/-1;display:flex;align-items:center;gap:12px">
+              <label class="switch nowrap"><input type="checkbox" id="upliftEnable"><span></span></label>
+              <span class="hint nowrap">Enable uplift</span>
+              <span id="upliftChip" class="badge" style="display:none"></span>
+            </div>
+            <div><label>Type</label>
+              <select id="upliftType">
+                <option value="%">Percent (%)</option>
+                <option value="+">Add amount (+)</option>
+              </select>
+            </div>
+            <div><label>Value</label><input class="num" id="upliftValue" type="text" value="10" data-format="number2"></div>
+            <div><label>Months</label><input class="num" id="upliftMonths" type="text" value="12" data-format="number0"></div>
+            <div class="hint" style="grid-column:1/-1">Applies to customer payment for the first N months.</div>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- RIGHT: SIDEBAR -->
+      <aside class="sidebar">
+        <section class="card" aria-labelledby="outTitle">
+          <div class="head"><h3 id="outTitle">Output Preview</h3></div>
+          <div class="body">
+            <div class="stats">
+              <div class="stat"><div class="k">Monthly PMT</div><div class="v" id="kMonthly">—</div></div>
+              <div class="stat"><div class="k">Effective rate</div><div class="v" id="kEffRate">—</div></div>
+              <div class="stat"><div class="k">IPA VAT</div><div class="v" id="kVat">—</div></div>
+              <div class="stat"><div class="k">IPA Net</div><div class="v" id="kNet">—</div></div>
+              <div class="stat"><div class="k">IPA Gross</div><div class="v" id="kGross">—</div></div>
+            </div>
+            <div class="hint" style="margin-top:8px">Top cards update live; schedule & rate pending math.</div>
+          </div>
+        </section>
+
+        <section class="card" aria-labelledby="actTitle">
+          <div class="head"><h3 id="actTitle">Status & Actions</h3></div>
+          <div class="body g2">
+            <div>
+              <label id="idLabel">Draft No.</label>
+              <input class="num" type="text" id="draftNo" value="—" readonly>
+            </div>
+            <div>
+              <label>Customer</label>
+              <input class="num" type="text" id="customerDisplay" value="—" readonly>
+            </div>
+            <div class="actions" style="grid-column:1 / -1;margin-top:6px">
+              <button class="btn ghost" id="btnSave">Save Draft</button>
+              <button class="btn" id="btnCompute">Compute</button>
+              <button class="btn" id="btnCommit" title="Commit as Contract (locks deletion)">Commit</button>
+              <button class="btn ghost" id="btnPostContract" style="display:none">Open as Post-Contract (editable copy)</button>
+              <button class="btn ghost" id="btnDelete" style="display:none" title="Delete draft(s) after a contract exists, or when status is Rejected.">Delete</button>
+            </div>
+            <div id="valStatus" class="err" style="grid-column:1/-1;display:none"></div>
+          </div>
+        </section>
+
+
+        <section class="card" aria-labelledby="insTitle">
+          <div class="head"><h3 id="insTitle">Insurance</h3></div>
+          <div class="body g3">
+            <div><label>Insurance Y1 (capitalized at start)</label><input class="num" id="insY1" type="text" placeholder="0" data-format="money"></div>
+            <div><label><input type="checkbox" id="insY2Enable"> Include Insurance Y2 (start m11)</label><input class="num" id="insY2" type="text" placeholder="0" data-format="money"></div>
+            <div><label><input type="checkbox" id="insY3Enable"> Include Insurance Y3 (start m23)</label><input class="num" id="insY3" type="text" placeholder="0" data-format="money"></div>
+            <div class="hint" style="grid-column:1/-1">Y2 and Y3 are capitalized at months 11 and 23 when ticked.</div>
+          </div>
+        </section>
+
+
+        <section class="card" aria-labelledby="cfTitle">
+          <div class="head"><h3 id="cfTitle">Credit Facility — preview</h3></div>
+          <div class="body">
+            <div class="hint">Known subtotal (fixed components): <b id="knownSubtotal">—</b></div>
+            <table style="margin-top:8px">
+              <thead><tr><th>Code</th><th>Basis</th><th>Value</th><th>Status</th></tr></thead>
+              <tbody id="cfRows">
+                <tr><td>G</td><td title="Tax Authority Pledge Registration">TAPR</td><td id="cfG">—</td><td>ok</td></tr>
+                <tr><td>H</td><td>Stamp Duty</td><td id="cfH">—</td><td>ok</td></tr>
+                <tr><td>I</td><td>Online Registration Fee</td><td id="cfI">—</td><td>ok</td></tr>
+                <tr><td>J</td><td title="Filing Minutes Fee">Filing Minutes Fee</td><td id="cfJ">—</td><td>ok</td></tr>
+                <tr><td>X</td><td title="Asset net (d) + VAT (E) − Down Payment (U)">D+E−U</td><td id="cfX">—</td><td>ok</td></tr>
+                <tr><td>f</td><td title="VAT on IPA − VAT on Asset">VAT Δ</td><td id="cfLowerF">—</td><td>ok</td></tr>
+                <tr><td>F</td><td title="TSE = F% × d (Asset net)">TSE 0.1% × d</td><td id="cfF">—</td><td>ok</td></tr>
+                <tr><td>P</td><td title="Insurance capitalized amounts: Y1 + (Y2 if enabled) + (Y3 if enabled)">Insurance</td><td id="cfP">—</td><td>ok</td></tr>
+                <tr><td>Q</td><td title="Fixed installation cost for telematics equipment">Telematics Equip & Install</td><td id="cfQ">—</td><td>ok</td></tr>
+                <tr><td>L</td><td>% of e</td><td id="cfL">—</td><td>ok</td></tr>
+                <tr><td>M</td><td>% of (e+fixed)</td><td id="cfM">—</td><td>ok</td></tr>
+                <tr><td>K</td><td>% × mult of e</td><td id="cfK">—</td><td>ok</td></tr>
+                <tr><td>N</td><td>% of c (interest)</td><td id="cfN">—</td><td>pending</td></tr>
+                                <tr><td style="font-weight:700">Total (g)</td><td></td><td id="cfTotal" style="font-weight:700">—</td><td></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="card" aria-labelledby="custTitle">
+          <div class="head"><h3 id="custTitle">Customers & Calculations</h3></div>
+          <div class="body">
+            <input class="num" id="searchCustomer" type="text" placeholder="Search customer..."/>
+            <div id="calcList" class="hint" style="margin-top:8px">No items yet.</div>
+          </div>
+        </section>
+
+        <section class="card" aria-labelledby="sanTitle">
+          <div class="head"><h3 id="sanTitle">Sanity Check</h3> <div class="actions"><button id="btnDemoEngine" class="btn ghost" style="padding:6px 10px">Run demo engine</button><button id="btnClearEngine" class="btn ghost" style="padding:6px 10px">Clear</button></div></div>
+          <div class="body">
+            <div class="g2">
+              <div><label>Equilibrium accuracy</label><input class="num" id="eqAcc" type="text" value="—" readonly></div>
+              <div><label>TSF accuracy</label><input class="num" id="tsfAcc" type="text" value="—" readonly></div>
+            </div>
+            <div class="hint" style="margin-top:6px">Demo fills monthly, rate, total interest <i>c</i>, IRR and accuracies. Real engine will overwrite these.</div>
+          </div>
+        </section>
+      </aside>
+    </div>
+
+    <section class="card" style="margin-top:12px" aria-labelledby="tsfTitle">
+      <div class="head"><h3 id="tsfTitle">Taxes & Fees (TSF)</h3><div class="tog"><span class="hint">TEE Applicable</span><span class="switch" id="switch-tee" role="switch" aria-checked="false" tabindex="0"></span></div></div>
+      <div class="body">
+        <div class="hint" style="margin-bottom:10px">
+          Bases: F = % of d; L = % of e; M = % of (e + fixed subtotal); K = % × multiplier of e; N = % of c (interest); O = % of (g + c). N & O activate when the engine provides <i>c</i> and the schedule.
+        </div>
+        <div class="g3" id="tsfBox">
+          <div><label>TSE Tax Rate (F) (%)</label><input class="num immutable" id="F" type="text" value="0.10" data-format="percent2" readonly data-default></div>
+          <div><label>Loan Registration Fee Rate (M) (%)</label><input class="num immutable" id="M" type="text" value="1.00" data-format="percent2" readonly data-default></div>
+          <div><label>Tax Authority Pledge Registration (G)</label><input class="num immutable" id="G" type="text" value="25,000" data-format="money" readonly data-default></div>
+          <div><label>Stamp Duty (H)</label><input class="num immutable" id="H" type="text" value="30,000" data-format="money" readonly data-default></div>
+          <div><label>Online Registration Fee (I)</label><input class="num immutable" id="I" type="text" value="6,650" data-format="money" readonly data-default></div>
+          <div><label>Filing Minutes Fee (J)</label><input class="num immutable" id="J" type="text" value="5,000" data-format="money" readonly data-default></div>
+          <div class="row" style="gap:8px"><div style="flex:1"><label>TEE Withholding Tax Rate (L) (%)</label><input class="num immutable" id="L" type="text" value="5.00" data-format="percent2" readonly data-default></div>
+          <div style="flex:1"><label>IRC Rate (N) (%)</label><input class="num immutable" id="N" type="text" value="18.00" data-format="percent2" readonly data-default></div></div>
+          <div class="row" style="gap:8px"><div style="flex:1"><label>Court Pledge Registration Fee (K) (%)</label><input class="num immutable" id="K" type="text" value="0.02" data-format="percent2" readonly data-default></div>
+          <div style="flex:.6"><label>× Multiplier</label><input class="num immutable" id="Kmult" type="text" value="1.5" data-format="number2" readonly data-default></div></div>
+          <div><label>Banking Fee (O) (%)</label><input class="num immutable" id="O" type="text" value="2.60" data-format="percent2" readonly data-default></div>
+          <div><label>Telematics Equip &amp; Install (Q)</label><input class="num immutable" id="Q" type="text" value="58,500" data-format="money" readonly data-default></div>
+          <div><label>Telematics Monthly Charge (R)</label><input class="num immutable" id="R" type="text" value="10,000" data-format="money" readonly data-default></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card basement" style="margin-top:12px" aria-labelledby="repTitle">
+      <div class="head"><h3 id="repTitle">Reports (Basement)</h3></div>
+      <div class="body">
+        <nav class="tabs" role="tablist">
+          <button class="tab" role="tab" aria-selected="true" aria-controls="p-schedule" id="t-schedule">PMT Schedule</button>
+          <button class="tab" role="tab" aria-selected="false" aria-controls="p-vat" id="t-vat">VAT Reports</button>
+          <button class="tab" role="tab" aria-selected="false" aria-controls="p-cap" id="t-cap">Capital Amortization</button>
+          <button class="tab" role="tab" aria-selected="false" aria-controls="p-tsf" id="t-tsf">TSF Recovery</button>
+          <button class="tab" role="tab" aria-selected="false" aria-controls="p-final" id="t-final">Final Reconciliation</button>
+        </nav>
+        <div class="panel" id="p-schedule" role="tabpanel" aria-hidden="false">
+          <div class="hint err" id="scheduleHint" style="margin:8px 0">Set Start Date and Tenure to preview.</div>
+          <table id="scheduleTable">
+            <thead><tr><th>#</th><th>Date</th><th>Annuity (net)</th><th>Interest</th><th>TSF</th><th>Capital</th><th>VAT</th><th>Total (incl. VAT)</th><th>Outstanding</th></tr></thead>
+            <tbody><tr><td>1</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr></tbody>
+          </table>
+        </div>
+        <div class="panel" id="p-vat" role="tabpanel" aria-hidden="true">
+          <table>
+            <thead><tr><th>Period</th><th>VAT Input (Asset)</th><th>VAT Output (IPA)</th><th>VAT Delta</th></tr></thead>
+            <tbody><tr><td>—</td><td>—</td><td>—</td><td>—</td></tr></tbody>
+          </table>
+        </div>
+        <div class="panel" id="p-cap" role="tabpanel" aria-hidden="true">
+          <table>
+            <thead><tr><th>#</th><th>Opening</th><th>Interest</th><th>TSF</th><th>Capital</th><th>Closing</th><th>OAV</th></tr></thead>
+            <tbody><tr><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr></tbody>
+          </table>
+        </div>
+        <div class="panel" id="p-tsf" role="tabpanel" aria-hidden="true">
+          <table>
+            <thead><tr><th>TSF</th><th>Total Amount</th><th>Spent</th><th>Recovered</th><th>Monthly Balance</th></tr></thead>
+            <tbody><tr><td>—</td><td id="tsfTotal">—</td><td>—</td><td>—</td><td>—</td></tr></tbody>
+          </table>
+        </div>
+        <div class="panel" id="p-final" role="tabpanel" aria-hidden="true">
+          <table>
+            <thead><tr><th>Metric</th><th>Value</th></tr></thead>
+            <tbody>
+              <tr><td>VAT Equilibrium (VAT IPA vs Asset+Delta)</td><td id="eqVat">—</td></tr>
+              <tr><td>IRR (running)</td><td id="kIrr">—</td></tr>
+              <tr><td>Interest Earned</td><td id="intEarned">—</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+
+    <section class="card" aria-labelledby="scnActTitle">
+      <div class="head"><h3 id="scnActTitle">Scenario Actions</h3></div>
+      <div class="body" id="actionsRoot">
+        <nav class="tabs" role="tablist">
+          <button class="tab" role="tab" aria-selected="true" aria-controls="p-off" id="t-off">Off-board</button>
+          <button class="tab" role="tab" aria-selected="false" aria-controls="p-res" id="t-res">Restructure</button>
+          <button class="tab" role="tab" aria-selected="false" aria-controls="p-pay" id="t-pay">Payout</button>
+        </nav>
+        <div class="panel" id="p-off" role="tabpanel" aria-hidden="false">
+          <div class="row" style="justify-content:space-between">
+            <div class="hint">Current fleet: <b><span id="fleetCountMirror">12</span></b></div>
+            <button class="btn ghost" id="openOff">Configure…</button>
+          </div>
+          <div id="offForm" class="g3" style="display:none;margin-top:10px">
+            <div><label>Remove vehicles (qty)</label><input class="num" id="fleetRemoveCount" type="text" value="1" data-format="number2"></div>
+            <div><label>From month</label><input class="num" id="fleetRemoveMonth" type="text" value="1" data-format="number0"></div>
+            <div style="align-self:end; display:flex; gap:8px"><button class="btn" id="fleetApply">Apply</button><button class="btn ghost" id="fleetCancel">Cancel</button></div>
+          </div>
+        </div>
+        <div class="panel" id="p-res" role="tabpanel" aria-hidden="true">
+          <div class="row" style="justify-content:flex-end"><button class="btn ghost" id="openRes">Configure…</button></div>
+          <div id="resForm" class="g3" style="display:none;margin-top:10px">
+            <div><label>From month</label><input class="num" id="resMonth" type="text" value="13" data-format="number0"></div>
+            <div><label>New tenure (months)</label><input class="num" id="resTenure" type="text" value="" data-format="number0"></div>
+            <div><label>New rᶜ (%)</label><input class="num" id="resRate" type="text" value="" data-format="percent2"></div>
+            <div style="align-self:end; display:flex; gap:8px"><button class="btn" id="resApply">Clone &amp; apply</button><button class="btn ghost" id="resCancel">Cancel</button></div>
+          </div>
+        </div>
+        <div class="panel" id="p-pay" role="tabpanel" aria-hidden="true">
+          <div class="row" style="justify-content:flex-end"><button class="btn" id="openPay">Open payout…</button></div>
+          <div id="payForm" class="g3" style="display:none;margin-top:10px">
+            <div><label>As-of month</label><input class="num" id="payoutMonth" type="text" value="12" data-format="number0"></div>
+            <div><label>Discount rate (%)</label><input class="num" id="payoutDisc" type="text" value="0" data-format="percent2"></div>
+            <div style="align-self:end; display:flex; gap:8px"><button class="btn" id="payoutCalc">Calculate</button><button class="btn ghost" id="payoutCancel">Cancel</button></div>
+            <div style="grid-column:1/-1" class="hint">Payout is a simple discounted outstanding placeholder for this static build.</div>
+            <div style="grid-column:1/-1"><label>Result</label><input class="num" id="payoutResult" type="text" value="—" readonly></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <section class="card" style="margin-top:12px" aria-labelledby="auditTitle">
+      <div class="head"><h3 id="auditTitle">Audit & Logs</h3></div>
+      <div class="body" id="auditBox" style="min-height:40px"><div class="hint">Events will appear here.</div></div>
+    </section>
+
+    <footer class="hint" style="margin:12px 2px">Static replica · UV v13.18 · pure HTML/CSS; JS adds validation, rounding policies, currency/locale, field-map, engine adapter, snapshot mode, A11y, autosave & leave prompts; numbers use PT Mono/Courier fallback.</footer>
+  </div>
+
+  <script>
+    // ===== FIELD MAP (single source of truth) =====
+    const FIELD_MAP = {
+      clientName:{key:'scenario.client', type:'text'},
+      operatorName:{key:'scenario.operator', type:'text'},
+      stage:{key:'scenario.stage', type:'enum'},
+      draftStatus:{key:'scenario.draftStatus', type:'enum'},
+      gross:{key:'asset.gross', type:'money', rounding:'amount'},
+      vatRate:{key:'asset.vatRate', type:'percent', rounding:'percent2'},
+      net:{key:'asset.net', type:'money', rounding:'amount'},
+      vatAmount:{key:'asset.vatAmount', type:'money', rounding:'amount'},
+      dpAmount:{key:'asset.dpAmount', type:'money', rounding:'amount'},
+      dpPercent:{key:'asset.dpPercent', type:'percent', rounding:'percent2'},
+      dpDate:{key:'asset.dpDate', type:'date'},
+      deliveryDate:{key:'asset.deliveryDate', type:'date'},
+      startDate:{key:'asset.startDate', type:'date'},
+      signDate:{key:'asset.signDate', type:'date'},
+      upaDate:{key:'asset.upaDate', type:'date'},
+      balloonAmount:{key:'asset.balloonAmount', type:'money', rounding:'amount'},
+      balloonPercent:{key:'asset.balloonPercent', type:'percent', rounding:'percent1'},
+      balloonDate:{key:'asset.balloonDate', type:'date'},
+      tenure:{key:'asset.tenure', type:'int'},
+      grace:{key:'asset.graceMonths', type:'int'},
+      rCustomer:{key:'rates.customer', type:'percent', rounding:'percent2'},
+      rFunding:{key:'rates.funding', type:'percent', rounding:'percent2'},
+      rDiscount:{key:'rates.discount', type:'percent', rounding:'percent2'},
+      // TSF
+      F:{key:'tsf.F', type:'percent', rounding:'percent2'},
+      M:{key:'tsf.M', type:'percent', rounding:'percent2'},
+      G:{key:'tsf.G', type:'money', rounding:'amount'},
+      H:{key:'tsf.H', type:'money', rounding:'amount'},
+      I:{key:'tsf.I', type:'money', rounding:'amount'},
+      J:{key:'tsf.J', type:'money', rounding:'amount'},
+      L:{key:'tsf.L', type:'percent', rounding:'percent2'},
+      N:{key:'tsf.N', type:'percent', rounding:'percent2'},
+      K:{key:'tsf.K', type:'percent', rounding:'percent2'},
+      Kmult:{key:'tsf.Kmult', type:'number', rounding:'number2'},
+      O:{key:'tsf.O', type:'percent', rounding:'percent2'},
+      teleEquip:{key:'tsf.tele_equip', type:'money', rounding:'amount'},
+      R:{key:'tsf.R', type:'money', rounding:'amount'},
+      // meta
+      currency:{key:'meta.currency', type:'enum'},
+      locale:{key:'meta.locale', type:'enum'},
+    };
+
+    // ===== ROUNDING POLICIES =====
+    const ROUND = {
+      halfUp:(n,dec=0)=>{const f=10**dec;return Math.round(n*f)/f;}, // commercial
+      bankers:(n,dec=0)=>{const f=10**dec;const x=n*f;const r=Math.floor(x);const frac=x-r; if(frac>0.5||frac<0.5) return Math.round(x)/f; return (r%2===0?r:r+1)/f;},
+      up:(n,dec=0)=>{const f=10**dec;return Math.ceil(n*f)/f;}
+    };
+    // Currency policy: XOF=0 decimals ROUND.UP, USD/EUR=2 decimals ROUND.HALFUP
+    function policyDecimals(){ return selCurrency.value==='XOF'? 0: 2; }
+    function policyRounder(){ return selCurrency.value==='XOF'? ROUND.up: ROUND.halfUp; }
+
+    // ===== FORMATTING HELPERS (locale-aware) =====
+    const selCurrency = document.getElementById('selCurrency');
+    const selLocale = document.getElementById('selLocale');
+
+    const unfmt = s => Number(String(s).replace(/[^0-9.-]/g,'')) || 0;
+    const fmtMoney = n => {
+      const dec = policyDecimals();
+      const round = policyRounder();
+      const v = round(n, dec);
+      return Number(v).toLocaleString(selLocale.value, { minimumFractionDigits: dec, maximumFractionDigits: dec });
+    };
+    const fmtPct = (n,dec=2)=> Number(ROUND.halfUp(n,dec)).toLocaleString(selLocale.value, { minimumFractionDigits: dec, maximumFractionDigits: dec });
+
+    function currencyChanged(){
+      updateDerived();
+      renderCalcList();
+    }
+    selCurrency.addEventListener('change', currencyChanged);
+    selLocale.addEventListener('change', currencyChanged);
+
+    // ===== PLACEHOLDER & BLUR FORMAT =====
+    document.querySelectorAll('[data-format]').forEach(el=>{
+      const type=el.getAttribute('data-format');
+      const apply=()=>{
+        if(el.hasAttribute('readonly')) return; // immutable
+        const raw = unfmt(el.value);
+        if(type==='money') el.value = el.value===''? '': fmtMoney(raw);
+        else if(type==='percent2') el.value = el.value===''? '': fmtPct(raw,2);
+        else if(type==='percent1') el.value = el.value===''? '': fmtPct(raw,1);
+        else if(type==='number2') el.value = el.value===''? '': ROUND.halfUp(raw,2);
+        markDirty(); updateDerived();
+      };
+      el.addEventListener('blur', apply);
+      el.addEventListener('input', ()=>{ markDirty(); liveValidate(); });
+    });
+
+    // ===== EDIT DEFAULTS =====
+    const defSwitch = document.getElementById('switch-defaults');
+    defSwitch.addEventListener('click', ()=>{
+      if(ROLE !== 'superuser') return;
+      defSwitch.classList.toggle('on');
+      const enable = defSwitch.classList.contains('on');
+      defSwitch.setAttribute('aria-checked', enable?'true':'false');
+      document.querySelectorAll('[data-default]').forEach(el=>{ el.readOnly = !enable; el.classList.toggle('immutable', !enable); });
+      logEvent(enable? 'Defaults editing enabled' : 'Defaults editing disabled');
+    });
+
+    // ===== CHIPS (mouse + keyboard) =====
+    function makeChipGroup(id, onChange){
+      const box=document.getElementById(id); if(!box) return;
+      function activate(el){ box.querySelectorAll('.chip').forEach(c=>c.classList.remove('active')); el.classList.add('active'); onChange && onChange(el.textContent.trim()); refreshUiByStage(); markDirty(); }
+      box.addEventListener('click', e=>{ const t=e.target.closest('.chip'); if(!t) return; activate(t); });
+      box.addEventListener('keydown', e=>{ if(e.key==='Enter' || e.key===' '){ const t=e.target.closest('.chip'); if(!t) return; activate(t); e.preventDefault(); }});
+    }
+    makeChipGroup('stageChips');
+    makeChipGroup('draftChips');
+
+    // ===== TABS =====
+    const tabs=[...document.querySelectorAll('.basement .tab')];
+    const panels=[...document.querySelectorAll('.basement .panel')];
+    function selectTab(id){
+      tabs.forEach(t=>t.setAttribute('aria-selected', String(t.id===id)));
+      panels.forEach(p=>p.setAttribute('aria-hidden', String(p.id!==document.getElementById(id).getAttribute('aria-controls'))));
+    }
+    tabs.forEach(t=>t.addEventListener('click',()=>selectTab(t.id)));
+
+    // ===== GLOBAL STATE =====
+    let ROLE = 'superuser'; // permanent in this build
+    document.getElementById('roleTag').textContent = `Role: ${ROLE[0].toUpperCase()+ROLE.slice(1)}`;
+    let assignedDraftId = null; // lock-in once assigned
+    let assignedContractId = null;
+    let lastSavedHash = null; // to avoid changing numbers without changes
+    let lastCommittedHash = null;
+    let autosaveTimer = null;
+    let autosaveArmed = false;
+
+    // ===== HELPERS =====
+    const $ = id => document.getElementById(id);
+
+    // ===== DATE MIN (no past dates) =====
+    const DATE_IDS = ['dpDate','deliveryDate','startDate','signDate','upaDate','balloonDate'];
+    function enforceDateMin(){
+      const today = new Date().toISOString().slice(0,10);
+      DATE_IDS.forEach(id=>{
+        const el=$(id); if(!el) return;
+        el.min = today;
+        const clamp = ()=>{ if(el.value && el.value < today){ el.value = today; } markDirty(); liveValidate(); };
+        el.addEventListener('change', clamp);
+        el.addEventListener('blur', clamp);
+      });
+    }
+
+    function getStage(){ return [...document.querySelectorAll('#stageChips .chip')].find(c=>c.classList.contains('active')).textContent.trim(); }
+    function getDraftStatus(){ return [...document.querySelectorAll('#draftChips .chip')].find(c=>c.classList.contains('active')).textContent.trim(); }
+    function yyyymmdd(d){ const s = new Date(d); const y=s.getFullYear(); const m=String(s.getMonth()+1).padStart(2,'0'); const da=String(s.getDate()).padStart(2,'0'); return `${y}${m}${da}`; }
+    function stableHash(obj){ return btoa(unescape(encodeURIComponent(JSON.stringify(obj)))).slice(0,18); }
+
+    function buildPayload(){
+      const payload = { currency: selCurrency.value, locale: selLocale.value };
+      for(const [id,meta] of Object.entries(FIELD_MAP)){
+        const el = $(id); if(!el) continue; let v=null;
+        switch(meta.type){
+          case 'money': v = unfmt(el.value); break;
+          case 'percent': v = unfmt(el.value); break;
+          case 'int': v = parseInt(unfmt(el.value)||0); break;
+          case 'number': v = Number(unfmt(el.value)); break;
+          case 'date': v = el.value || null; break;
+          case 'enum': v = null; break;
+          case 'text': v = el.value || ''; break;
+        }
+        payload[meta.key] = v;
+      }
+      payload['scenario.stage'] = getStage();
+      payload['scenario.draftStatus'] = getDraftStatus();
+      payload['meta.id'] = $('draftNo').value;
+      payload['meta.calcVersion'] = $('calcVersion').textContent.trim();
+      payload['meta.uiVersion'] = $('uiVersion').textContent.trim();
+      payload['meta.operator'] = $('operatorName').value || '';
+      payload['meta.timestamp'] = new Date().toISOString();
+      return payload;
+    }
+
+    // ===== VALIDATION =====
+    function validate(){
+      const issues=[]; const warn=[];
+      if(!$('clientName').value) issues.push('Client Company Name is required.');
+      const t = parseInt(unfmt($('tenure').value)||0); if(!(t>0)) issues.push('Tenure must be > 0 months.');
+      if(!$('startDate').value) issues.push('Start Date is required.');
+      const dpP = unfmt($('dpPercent').value); if(dpP<0 || dpP>100) issues.push('Down PMT % must be 0–100.');
+      ['vatRate','rCustomer','rFunding','rDiscount','F','M','L','N','K','O'].forEach(id=>{ const v=unfmt($(id).value); if(v<0) issues.push(id+ ' cannot be negative.'); });
+      // Grace confirmation
+      if(unfmt($('grace').value)>0 && !$('btnGraceConfirm').dataset.confirmed){
+        issues.push('Confirm Grace Period > 0.');
+      }
+      return {issues,warn};
+    }
+    function liveValidate(){
+      const {issues}=validate();
+      // Split hints: tenure/start/date go to Asset box; others to Scenario
+      const assetMsgs = issues.filter(m=>/Tenure|Start Date|Down PMT|Grace/i.test(m));
+      const otherMsgs = issues.filter(m=>!assetMsgs.includes(m));
+      $('valAsset').style.display = assetMsgs.length? 'block':'none';
+      $('valAsset').textContent = assetMsgs.join(' ');
+      $('valScenario').style.display = otherMsgs.length? 'block':'none';
+      $('valScenario').textContent = otherMsgs.join(' ');
+      $('btnCommit').disabled = issues.length>0;
+      $('btnCompute').disabled = issues.length>0;
+      // Schedule hint visibility
+      const t = parseInt(unfmt($('tenure').value)||0);
+      const haveStart = !!$('startDate').value;
+      $('scheduleHint').style.display = (t>0 && haveStart) ? 'none' : 'block';
+    }
+
+    // ===== LOGGING =====
+    function logEvent(msg){ const box=$('auditBox'); const row=document.createElement('div'); row.textContent = `${new Date().toLocaleString()} • ${msg}`; box.appendChild(row); }
+
+    // ===== DERIVED, BALLOON, CF =====
+    function addMonths(date, months){ const d=new Date(date.getTime()); const day=d.getDate(); d.setMonth(d.getMonth()+months); if(d.getDate()<day) d.setDate(0); return d; }
+    let balloonOverride=false;
+    function recomputeBalloonDate(force=false){ if(balloonOverride && !force) return; const t=parseInt(unfmt($('tenure').value)); const sd=$('startDate').value? new Date($('startDate').value): null; if(sd && t){ const tmp=addMonths(sd,t); tmp.setDate(tmp.getDate()+5); $('balloonDate').value = tmp.toISOString().slice(0,10);} else {$('balloonDate').value='';} }
+
+    function updateDerived(){
+      const g = unfmt($('gross').value); const vr=unfmt($('vatRate').value)/100;
+      if(g>0){ const n=g/(1+vr); const v=g-n; $('net').value=fmtMoney(n); $('vatAmount').value=fmtMoney(v); $('kNet').textContent=fmtMoney(n); $('kVat').textContent=fmtMoney(v); $('kGross').textContent=fmtMoney(g);} else { $('net').value='Computed = Gross / (1 + VAT%)'; $('vatAmount').value='Computed = Gross – Net'; $('kNet').textContent='—'; $('kVat').textContent='—'; $('kGross').textContent='—'; }
+      const dpA=unfmt($('dpAmount').value); const dpP=unfmt($('dpPercent').value); if(document.activeElement===$('dpPercent') || (dpP && !dpA)){ if(g>0){ $('dpAmount').value=fmtMoney(g*dpP/100); }} else if(document.activeElement===$('dpAmount') || (dpA && !dpP)){ if(g>0){ $('dpPercent').value=fmtPct((dpA/g)*100,2); }}
+      const bA=unfmt($('balloonAmount').value); const bP=unfmt($('balloonPercent').value); if(document.activeElement===$('balloonPercent') || (bP && !bA)){ if(g>0){ $('balloonAmount').value=fmtMoney(g*bP/100); }} else if(document.activeElement===$('balloonAmount') || (bA && !bP)){ if(g>0){ $('balloonPercent').value=fmtPct((bA/g)*100,1); }}
+
+const G=unfmt($('#G').value),H=unfmt($('#H').value),I=unfmt($('#I').value),J=unfmt($('#J').value);
+// Use gross & VAT rate to derive d (asset net)
+const gGross = unfmt($('#gross').value);
+const vrate = unfmt($('#vatRate').value)/100;
+const dNet = gGross/(1+vrate) || 0;
+// TSF extras
+const X = Math.max(0, gGross - unfmt($('#dpAmount').value));              // D+E−U
+const fAmt = 0;                                                           // VAT Δ placeholder (engine-derived later)
+const Frate = (unfmt($('#F')?.value||0))/100;                             // TSE rate F (%)
+const Famt  = dNet * Frate;                                               // TSE = F% × d
+const ins1 = unfmt($('#insY1')?.value||0);
+const ins2 = ($('#insY2Enable')?.checked ? unfmt($('#insY2')?.value||0) : 0);
+const ins3 = ($('#insY3Enable')?.checked ? unfmt($('#insY3')?.value||0) : 0);
+const Pamt = ins1 + ins2 + ins3;                                         // Insurance (Y1 + Y2? + Y3?)
+const Qamt = unfmt($('#Q')?.value||0);                                    // Telematics Equip & Install
+// Known fixed subtotal & table rendering
+const fixed=G+H+I+J+X+fAmt+Famt+Pamt+Qamt;
+$('knownSubtotal').textContent=fmtMoney(fixed);
+$('cfG').textContent=fmtMoney(G); $('cfH').textContent=fmtMoney(H); $('cfI').textContent=fmtMoney(I); $('cfJ').textContent=fmtMoney(J);
+$('cfX').textContent=fmtMoney(X); $('cfLowerF').textContent=fmtMoney(fAmt); $('cfF').textContent=fmtMoney(Famt);
+$('cfP').textContent=fmtMoney(Pamt); $('cfQ').textContent=fmtMoney(Qamt);
+const e=Math.max(0,g - unfmt($('dpAmount').value)); const tee=$('switch-tee').classList.contains('on'); const Lrate=unfmt($('L').value)/100; const Lamt=tee? e*Lrate:0; $('cfL').textContent=fmtMoney(Lamt);
+      const Krate=unfmt($('K').value)/100; const Kmult=unfmt($('Kmult').value)||1; const Kamt=e*Krate*Kmult; $('cfK').textContent=fmtMoney(Kamt);
+      const Mrate=unfmt($('M').value)/100; const Mamt=(e+fixed)*Mrate; $('cfM').textContent=fmtMoney(Mamt);
+      const c=window.__ENGINE__?.summary?.totalInterest ?? null; let Namt=0, Oamt=0; if(c!=null){ const Nrate=unfmt($('N').value)/100; Namt=c*Nrate; $('cfN').textContent=fmtMoney(Namt); const Orate=unfmt($('O').value)/100; Oamt=(fixed+Lamt+Mamt+Kamt+c)*Orate; $('cfO').textContent=fmtMoney(Oamt);} else { $('cfN').textContent='—'; $('cfO').textContent='—'; }
+      $('cfTotal').textContent=fmtMoney(fixed+Lamt+Mamt+Kamt+Namt);
+      liveValidate();
+    }
+
+    ['gross','vatRate','dpAmount','dpPercent','balloonAmount','balloonPercent','tenure','startDate'].forEach(id=> $(id).addEventListener('input', updateDerived));
+    $('balloonDate').addEventListener('input', ()=>{balloonOverride=true; markDirty();}); $('btnAutoBalloon').addEventListener('click', ()=>{balloonOverride=false; recomputeBalloonDate(true);});
+
+    // Grace: prevent "00", require confirm when >0
+    const grace = $('grace');
+    const btnGraceConfirm = $('btnGraceConfirm');
+    grace.addEventListener('input', ()=>{
+      if(grace.value === '00') { grace.value = '0'; }
+      const v = parseInt(unfmt(grace.value)||0);
+      if(v>0){
+        grace.style.color = '#b91c1c';
+        btnGraceConfirm.style.display = 'inline-block';
+        btnGraceConfirm.dataset.confirmed = '';
+      } else {
+        grace.style.color = '#111';
+        btnGraceConfirm.style.display = 'none';
+        delete btnGraceConfirm.dataset.confirmed;
+      }
+      markDirty(); liveValidate();
+    });
+    btnGraceConfirm.addEventListener('click', ()=>{
+      btnGraceConfirm.dataset.confirmed = 'true';
+      grace.style.color = '#111'; // back to normal
+      btnGraceConfirm.style.display = 'none';
+      liveValidate();
+      logEvent('Grace Period confirmed: '+ grace.value);
+    });
+
+    // TEE default OFF
+    const teeSwitch=$('switch-tee'); teeSwitch.classList.remove('on'); teeSwitch.addEventListener('click', ()=>{ teeSwitch.classList.toggle('on'); updateDerived(); logEvent('TEE '+(teeSwitch.classList.contains('on')?'enabled':'disabled'));});
+
+    // ===== STORAGE =====
+    const LocalAdapter={ get seq(){return JSON.parse(localStorage.getItem('ipa_seq')||'{}');}, set seq(v){localStorage.setItem('ipa_seq',JSON.stringify(v));}, get db(){return JSON.parse(localStorage.getItem('ipa_db')||'{}');}, set db(v){localStorage.setItem('ipa_db',JSON.stringify(v));}, nextSeq(key){const s=this.seq; s[key]=(s[key]||0)+1; this.seq=s; return s[key];}, save(client,payload){const db=this.db; (db[client]=db[client]||[]).push(payload); this.db=db; return Promise.resolve(payload);}, delete(client,id){const db=this.db; db[client]=(db[client]||[]).filter(r=>r.id!==id||r.committed); this.db=db; return Promise.resolve();}, list(){return Promise.resolve(this.db);}, commit(payload){return Promise.resolve({ok:true});} };
+    function RemoteAdapter(api){ return { nextSeq:key=>api.nextSeq(key), save:(c,p)=>api.save(c,p), delete:(c,i)=>api.delete(c,i), list:f=>api.list(f), commit:p=>api.commitToNetsol(p), compute:p=>api.compute(p) } }
+    const DB = window.__API__ ? RemoteAdapter(window.__API__) : LocalAdapter;
+
+    // ===== ID, SAVE/COMMIT/DELETE, SNAPSHOT =====
+
+    function refreshUiByStage(){
+      const stage = getStage();
+      const committed = assignedContractId!=null;
+      const idInput = $('draftNo');
+      $('idLabel').textContent = stage==='Contract'? 'Contract No.':'Draft No.';
+
+      if(stage==='Contract'){
+        if(!assignedContractId){ assignContractIdIfNeeded(); }
+        if(assignedContractId){ idInput.value = assignedContractId; }
+        idInput.readOnly = false; // allow user override in Contract stage
+      } else {
+        idInput.readOnly = true;
+        if(!assignedDraftId){ assignDraftIdIfNeeded(); }
+        if(assignedDraftId){ idInput.value = assignedDraftId; }
+      }
+
+      $('snapshotBadge').style.display = committed && stage==='Contract'? 'inline-block':'none';
+      updateDeleteVisibility();
+    }
+
+
+    function markDirty(){ window.__DIRTY__=true; armAutosave(); }
+
+    function assignDraftIdIfNeeded(){ if(assignedDraftId) return; const client=$('clientName').value||'NoCustomer'; const today=yyyymmdd(new Date()); const seq=DB.nextSeq(`draft-${client}`); assignedDraftId=`${today}-${seq}`; $('draftNo').value=assignedDraftId; logEvent('Draft ID assigned '+assignedDraftId); }
+
+    function assignContractIdIfNeeded(){ if(assignedContractId) return; const year=new Date().getFullYear(); const seq=DB.nextSeq(`contract-${year}`); assignedContractId=`IPA-${seq}/${year}`; $('draftNo').value=assignedContractId; logEvent('Contract No. assigned '+assignedContractId); }
+
+    function currentPayload(){ const p=buildPayload(); p['scenario.stage']=getStage(); p['scenario.draftStatus']=getDraftStatus(); p['meta.currency']=selCurrency.value; p['meta.locale']=selLocale.value; p.id=$('draftNo').value; p.committed= !!assignedContractId; return p; }
+
+    function updateDeleteVisibility(){ const stage=getStage(); const status=getDraftStatus(); const show = (stage!=='Contract'); const enabled = (status==='Rejected' || assignedContractId!=null); $('btnDelete').style.display = show? 'inline-block':'none'; $('btnDelete').disabled = !enabled; $('btnDelete').title = enabled? 'Delete draft' : 'Delete is available after a Contract exists or when status is Rejected.'; }
+
+    $('btnSave').addEventListener('click', async ()=>{
+      const {issues}=validate(); if(issues.length){ liveValidate(); alert('Fix issues before saving: '+issues.join(' ')); return; }
+      assignDraftIdIfNeeded(); const payload=currentPayload(); payload.createdAt = new Date().toISOString();
+      const hash=stableHash(payload); if(hash===lastSavedHash){ logEvent('Save skipped (no changes).'); return; }
+      await DB.save(payload['scenario.client']||'NoCustomer', payload); lastSavedHash=hash; window.__DIRTY__=false; autosaveArmed=false; renderCalcList(); logEvent('Draft saved.');
+    });
+
+    $('btnCompute').addEventListener('click', async ()=>{
+      const {issues}=validate(); if(issues.length){ liveValidate(); alert('Fix issues before compute: '+issues.join(' ')); return; }
+      const payload=currentPayload(); if(DB.compute){ const out=await DB.compute(payload); applyBackendSummary(out.summary); } else { runDemoEngine(); }
+    });
+
+    $('btnCommit').addEventListener('click', async ()=>{
+      const {issues}=validate(); if(issues.length){ liveValidate(); alert('Fix issues before commit: '+issues.join(' ')); return; }
+      const stage=getStage(); if(stage!=='Contract'){ alert('Switch Stage to Contract to commit.'); return; }
+      if(!confirm('Check the dates. If everything looks correct, press OK to commit this calculation to Contract.')) return;
+      assignContractIdIfNeeded(); const payload=currentPayload(); const hash=stableHash(payload); if(hash===lastCommittedHash){ logEvent('Commit skipped (no changes).'); return; }
+      payload.committed=true; payload.createdAt = new Date().toISOString();
+      await DB.save(payload['scenario.client']||'NoCustomer', payload); lastCommittedHash=hash; window.__DIRTY__=false; autosaveArmed=false; $('snapshotBadge').style.display='inline-block'; $('btnPostContract').style.display='inline-block'; updateDeleteVisibility(); if(DB.commit) try{ await DB.commit(payload);}catch{} logEvent('Committed (placeholder NetSol handoff prepared).');
+    });
+
+    $('btnPostContract').addEventListener('click', ()=>{
+      const payload=currentPayload(); const copy=JSON.parse(JSON.stringify(payload)); copy.committed=false; assignedContractId=null; assignedDraftId=null; document.querySelectorAll('#stageChips .chip').forEach(c=>c.classList.remove('active')); document.querySelector('#stageChips .chip:last-child').classList.add('active'); $('draftNo').value='—'; refreshUiByStage(); window.__DIRTY__=true; logEvent('Opened editable post-contract copy.');
+    });
+
+    $('btnDelete').addEventListener('click', async ()=>{ const id=$('draftNo').value; const client=$('clientName').value||'NoCustomer'; await DB.delete(client,id); renderCalcList(); logEvent('Draft deleted: '+id); });
+
+    // Customer live mirror
+    $('clientName').addEventListener('input', ()=>{ $('customerDisplay').value = $('clientName').value || '—'; });
+
+    // ===== BACKEND ENGINE HOOK + DEMO =====
+    window.applyBackendSummary = function(summary){ if(summary.monthly!=null) $('kMonthly').textContent=fmtMoney(summary.monthly); if(summary.effRate!=null) $('kEffRate').textContent=fmtPct(summary.effRate,2)+'%'; if(summary.irr!=null) $('kIrr').textContent=fmtPct(summary.irr,2)+'%'; if(summary.eqAccuracy!=null) $('eqAcc').value=summary.eqAccuracy; if(summary.tsfAccuracy!=null) $('tsfAcc').value=summary.tsfAccuracy; window.__ENGINE__={summary}; $('intEarned').textContent = summary.totalInterest!=null? fmtMoney(summary.totalInterest): $('intEarned').textContent; updateDerived(); };
+    function runDemoEngine(){ const e=Math.max(0, unfmt($('gross').value) - unfmt($('dpAmount').value)); const n=parseInt(unfmt($('tenure').value)||0); const r_m = (unfmt($('rCustomer').value)/100)/12; if(!(e>0 && n>0)){ alert('Enter Gross, DP and Tenure first.'); return; } let pmt, totalInterest; if(r_m>0){ pmt = e * (r_m) / (1 - Math.pow(1+r_m, -n)); totalInterest = pmt*n - e; } else { pmt = e/n; totalInterest = 0; } applyBackendSummary({ monthly:pmt, effRate:unfmt($('rCustomer').value), irr:unfmt($('rCustomer').value), totalInterest, eqAccuracy:'ok (demo)', tsfAccuracy:'ok (demo)' }); }
+    $('btnDemoEngine').addEventListener('click', runDemoEngine); $('btnClearEngine').addEventListener('click', ()=>{ window.__ENGINE__=null; ['kMonthly','kEffRate','kIrr'].forEach(id=>$(id).textContent='—'); $('eqAcc').value='—'; $('tsfAcc').value='—'; $('intEarned').textContent='—'; updateDerived(); });
+
+    // ===== EXPORTERS =====
+    $('btnExportXlsx').addEventListener('click', ()=>{
+      const p = buildPayload();
+      const rows = [
+        ['Field','Value'],
+        ['Timestamp', p['meta.timestamp']],
+        ['Operator', p['meta.operator']],
+        ['Client', p['scenario.client']],
+        ['Stage', p['scenario.stage']],
+        ['Status', p['scenario.draftStatus']],
+        ['ID', p['meta.id']],
+        ['Calc Version', p['meta.calcVersion']],
+        ['UI Version', p['meta.uiVersion']],
+        ['Currency', p['currency'] || selCurrency.value],
+        ['Locale', p['locale'] || selLocale.value],
+        ['Asset Gross', unfmt($('gross').value)],
+        ['VAT Rate %', unfmt($('vatRate').value)],
+        ['Asset Net', unfmt($('net').value)],
+        ['VAT Amount', unfmt($('vatAmount').value)],
+        ['Down PMT Amount', unfmt($('dpAmount').value)],
+        ['Down PMT %', unfmt($('dpPercent').value)],
+        ['Balloon Amount', unfmt($('balloonAmount').value)],
+        ['Balloon %', unfmt($('balloonPercent').value)],
+        ['Known TSF Fixed Subtotal', unfmt($('knownSubtotal').textContent)],
+        ['CF Total (g)', unfmt($('cfTotal').textContent)],
+      ];
+      const csv = rows.map(r=> r.map(x=>`"${String(x).replace(/"/g,'""')}"`).join(',')).join('\n');
+      const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'ipa_export.csv';
+      document.body.appendChild(a); a.click(); a.remove();
+    });
+    $('btnExportPdf').addEventListener('click', ()=> window.print());
+
+    // ===== LIST & SEARCH (limit 3) =====
+    async function renderCalcList(){ const list=$('calcList'); const q=($('searchCustomer').value||'').toLowerCase(); const db=await DB.list(); const items=[]; Object.keys(db).filter(c=>c.toLowerCase().includes(q)).forEach(c=>{ const rows=(db[c]||[]).slice().sort((a,b)=> new Date(b.createdAt||b.timestamp||0)-new Date(a.createdAt||a.timestamp||0)); rows.forEach(r=> items.push({c,r})) }); items.sort((a,b)=> new Date(b.r.createdAt||0)-new Date(a.r.createdAt||0)); const top=items.slice(0,3); if(top.length===0){ list.textContent='No items yet.'; return; } list.innerHTML = top.map(({c,r},i)=>`<div style="display:flex;justify-content:space-between;border:1px solid var(--line);border-radius:10px;padding:8px;margin:6px 0;background:#fff"><div><b>${c}</b><div class=\"hint\">${r.stage} • ${r.id} • ${new Date(r.createdAt||Date.now()).toLocaleString()}</div></div><div class="row"><button class="btn ghost" onclick='loadCalc(${i})'>Open</button></div></div>`).join(''); window.___items=top; }
+    window.loadCalc = function(idx){ const item=(window.___items||[])[idx]; if(!item) return; const r=item.r; ['clientName','operatorName'].forEach(id=>$(id).value=r[id]||r['scenario.client']||$('clientName').value); $('customerDisplay').value=$('clientName').value||'—'; ['gross','vatRate','net','vatAmount','dpAmount','dpPercent','balloonAmount','balloonPercent'].forEach(id=>{ const el=$(id); if(!el) return; if(el.getAttribute('data-format')==='money') el.value=fmtMoney(r[id]||r[FIELD_MAP[id]?.key]||0); else if(el.getAttribute('data-format')?.startsWith('percent')) el.value=fmtPct(r[id]||r[FIELD_MAP[id]?.key]||0,2); else el.value=r[id]||''; }); ['tenure','grace'].forEach(id=>$(id).value=r[id]||''); ['startDate','signDate','deliveryDate','upaDate','dpDate','balloonDate'].forEach(id=>$(id).value=r[id]||''); $('draftNo').value=r.id; assignedDraftId = r.stage==='Contract'? null : r.id; assignedContractId = r.stage==='Contract'? r.id : null; refreshUiByStage(); updateDerived(); logEvent('Loaded '+r.id); }
+
+    // ===== AUTOSAVE & LEAVE PROMPT =====
+    function armAutosave(){
+      if(autosaveArmed) return;
+      autosaveArmed = true;
+      if(autosaveTimer) clearTimeout(autosaveTimer);
+      autosaveTimer = setTimeout(async ()=>{
+        if(!window.__DIRTY__) { autosaveArmed=false; return; }
+        assignDraftIdIfNeeded(); const payload=currentPayload(); payload.createdAt = new Date().toISOString();
+        const hash=stableHash(payload); if(hash===lastSavedHash){ autosaveArmed=false; return; }
+        await DB.save(payload['scenario.client']||'NoCustomer', payload); lastSavedHash=hash; window.__DIRTY__=false; autosaveArmed=false; renderCalcList(); logEvent('Autosaved after 20 minutes idle.');
+      }, 20*60*1000); // 20 minutes
+    }
+    window.addEventListener('beforeunload', (e)=>{
+      if(window.__DIRTY__){
+        e.preventDefault();
+        e.returnValue = 'You have unsaved changes. Save before leaving?';
+      }
+    });
+    document.addEventListener('visibilitychange', async ()=>{
+      if(document.visibilityState==='hidden' && window.__DIRTY__){
+        try{
+          assignDraftIdIfNeeded(); const payload=currentPayload(); payload.createdAt = new Date().toISOString();
+          const hash=stableHash(payload); if(hash!==lastSavedHash){ await DB.save(payload['scenario.client']||'NoCustomer', payload); lastSavedHash=hash; logEvent('Autosave on hide.'); }
+        }catch{}
+      }
+    });
+
+    // ===== INITIAL =====
+    document.addEventListener('DOMContentLoaded', ()=>{
+      enforceDateMin();
+      // Autofill operator if available
+      if(window.__USER__ && window.__USER__.name && !$('operatorName').value){
+        $('operatorName').value = window.__USER__.name;
+      }
+      recomputeBalloonDate(true); updateDerived(); refreshUiByStage(); renderCalcList(); liveValidate();
+    });
+
+    // ===== MICRO TESTS (console) =====
+    (function tests(){ const ok=(name,cond)=>console.log(cond? '✅ '+name:'❌ '+name); ok('round XOF up 100.1 → 101', ROUND.up(100.1,0)===101); ok('round USD 100.125 → 100.13', ROUND.halfUp(100.125,2)===100.13); const fBefore=unfmt('1,234'); ok('unfmt 1,234', fBefore===1234); })();
+  </script>
+<script>
+// === v13.7 patch: company alert + draft suffixes ===
+function hasCompany(){
+  const candIds = ['companyName','clientName','customerName','company','buyerName'];
+  for (const id of candIds){
+    const el = document.getElementById(id);
+    if (el && String(el.value||'').trim().length>0) return true;
+  }
+  return false;
+}
+
+// Hide lingering "Enter Company name" alerts as soon as name is provided
+function squashCompanyAlert(){
+  const nodes = Array.from(document.querySelectorAll('[role="alert"], .alert, .notice, .warning'));
+  nodes.forEach(n=>{
+    const txt = (n.textContent||'').toLowerCase();
+    if (txt.includes('enter company name') && hasCompany()){
+      n.style.display='none';
+      n.setAttribute('aria-hidden','true');
+    }
+  });
+}
+
+// MutationObserver guards against reappearing alerts
+(function(){
+  const obs = new MutationObserver(()=>squashCompanyAlert());
+  obs.observe(document.body, {childList:true, subtree:true});
+})();
+
+// Wire up immediate hide on typing
+(function(){
+  const candIds = ['companyName','clientName','customerName','company','buyerName'];
+  candIds.forEach(id=>{
+    const el = document.getElementById(id);
+    if (el){
+      ['input','change','blur'].forEach(ev=>el.addEventListener(ev, squashCompanyAlert));
+    }
+  });
+})();
+
+// === Draft number suffix by status (A for approved, R for rejected) ===
+function updateDraftSuffixByStatus(){
+  var idInput = document.getElementById('draftNo');
+  if (!idInput) return;
+
+  // Contract stage → strip suffix
+  if (typeof getStage === 'function' && getStage() === 'Contract') {
+    idInput.value = (idInput.value || '').replace(/[AR]$/, '');
+    return;
+  }
+
+  function readStatus(){
+    // Prefer the chip UI
+    var activeChip = document.querySelector('#draftChips .chip.active');
+    if (activeChip) {
+      return (activeChip.dataset.status || activeChip.textContent || '')
+               .trim().toLowerCase();
+    }
+    // Fallback to selects/inputs if present
+    var statusEl = document.getElementById('draftStatus')
+               || document.getElementById('status')
+               || document.getElementById('calcStatus');
+    if (statusEl && typeof statusEl.value === 'string') {
+      return statusEl.value.trim().toLowerCase();
+    }
+    return '';
+  }
+
+  var base = (idInput.value || '—').replace(/[AR]$/, '');
+  var val  = readStatus();
+
+  if (val === 'approved')      idInput.value = base + 'A';
+  else if (val === 'rejected') idInput.value = base + 'R';
+  else                         idInput.value = base;
+}
+
+// Bind once (chips and any select-style status), then run once on load
+(function(){
+  var chips = document.querySelectorAll('#draftChips .chip');
+  if (chips.length) {
+    chips.forEach(function(ch){
+      ch.addEventListener('click', function(){
+        // (No need to toggle .active here if your UI already does it)
+        updateDraftSuffixByStatus();
+      });
+    });
+  }
+  ['draftStatus','status','calcStatus'].forEach(function(id){
+    var el = document.getElementById(id);
+    if (el) el.addEventListener('change', updateDraftSuffixByStatus);
+  });
+  updateDraftSuffixByStatus();
+})();
+
+
+// Call once on load and also whenever UI stage changes
+if (typeof document !== 'undefined'){
+  document.addEventListener('DOMContentLoaded', ()=>{
+    squashCompanyAlert();
+    updateDraftSuffixByStatus();
+  });
+}
+
+// If app defines a stage refresh hook, patch it to also refresh draft suffix
+if (typeof refreshUiByStage === 'function'){
+  const _oldRefresh = refreshUiByStage;
+  refreshUiByStage = function(){
+    _oldRefresh.apply(this, arguments);
+    try{ updateDraftSuffixByStatus(); }catch(e){ /* no-op */ }
+    try{ squashCompanyAlert(); }catch(e){ /* no-op */ }
+  }
+}
+
+</script>
+<script>
+// ==== v13.18 actions tabs & uplift UI ====
+(function(){
+  const root = document.getElementById('actionsRoot');
+  if(!root) return;
+  const tabs = root.querySelectorAll('.tab');
+  const panels = root.querySelectorAll('.panel');
+  tabs.forEach(tab=>tab.addEventListener('click', ()=>{
+    tabs.forEach(t=>t.setAttribute('aria-selected', String(t===tab)));
+    panels.forEach(p=>p.setAttribute('aria-hidden', String(p.id !== tab.getAttribute('aria-controls'))));
+  }));
+  // Off-board
+  $('#openOff')?.addEventListener('click', ()=>{ $('#offForm').style.display='grid'; });
+  $('#fleetCancel')?.addEventListener('click', ()=>{ $('#offForm').style.display='none'; });
+  $('#fleetApply')?.addEventListener('click', ()=>{
+    const cur = parseInt(unfmt($('#fleetCount').textContent)||0);
+    const rem = parseInt(unfmt($('#fleetRemoveCount').value)||0);
+    const m = parseInt(unfmt($('#fleetRemoveMonth').value)||1);
+    const next = Math.max(0, cur - rem);
+    $('#fleetCount').textContent = String(next);
+    logEvent(`Off-board ${rem} vehicle(s) from month ${m}. Fleet → ${next}`);
+    $('#offForm').style.display='none';
+  });
+  // Restructure
+  $('#openRes')?.addEventListener('click', ()=>{ $('#resForm').style.display='grid'; });
+  $('#resCancel')?.addEventListener('click', ()=>{ $('#resForm').style.display='none'; });
+  $('#resApply')?.addEventListener('click', ()=>{
+    const m = parseInt(unfmt($('#resMonth').value)||1);
+    const n = parseInt(unfmt($('#resTenure').value)||0);
+    const r = parseFloat(unfmt($('#resRate').value)||0);
+    logEvent(`Restructure from month ${m} (new tenure ${n}, rᶜ ${r}%). Cloned scenario created.`);
+    $('#resForm').style.display='none';
+  });
+  // Payout
+  $('#openPay')?.addEventListener('click', ()=>{ $('#payForm').style.display='grid'; });
+  $('#payoutCancel')?.addEventListener('click', ()=>{ $('#payForm').style.display='none'; });
+  $('#payoutCompute')?.addEventListener('click', ()=>{
+    const e = Math.max(0, unfmt($('#gross').value) - unfmt($('#dpAmount').value));
+    const n = parseInt(unfmt($('#tenure').value)||0);
+    const r_m = (unfmt($('#rCustomer').value)/100)/12;
+    const Rm = unfmt($('#R').value)||0;
+    let pmt = window.__ENGINE__?.summary?.monthly || (r_m>0 ? (e * (r_m) / (1 - Math.pow(1+r_m, -n))) : (e/n||0));
+    pmt += Rm; // include R in monthly cash-out
+    const asOf = Math.min(n, parseInt(unfmt($('#payoutMonth').value)||0));
+    const bal = (r_m>0) ? (pmt-Rm) * (1 - Math.pow(1+r_m, -(n-asOf))) / r_m : Math.max(0, (e/n||0) * (n-asOf));
+    const disc = (unfmt($('#payoutDisc').value)/100)/12;
+    const dp = disc>0 ? bal / Math.pow(1+disc, n-asOf) : bal;
+    $('#payoutResult').textContent = `Payout ≈ ${fmtMoney(bal)}  •  Discounted ≈ ${fmtMoney(dp)}`;
+  });
+})();
+
+// Uplift chip
+(function(){
+  const en=$('#upliftEnable'), typ=$('#upliftType'), val=$('#upliftValue'), mo=$('#upliftMonths'), chip=$('#upliftChip');
+  if(!en) return;
+  function draw(){
+    chip.style.display = en.checked ? 'inline-block' : 'none';
+    if(en.checked){
+      const t = typ.value==='%' ? `${Number(val.value||0)}%` : `+${fmtMoney(Number(val.value||0))}`;
+      chip.textContent = `Applied: ${t} for ${Number(mo.value||0)} month(s)`;
+    }
+  }
+  [en,typ,val,mo].forEach(el=>el && el.addEventListener('input', draw));
+  document.addEventListener('DOMContentLoaded', draw);
+})();
+
+// Show R in Monthly PMT display but keep it out of (g)
+(function bumpMonthlyWithR(){
+  function baseMonthly(){
+    const el = document.getElementById('kMonthly');
+    if(!el) return 0;
+    const baseAttr = el.getAttribute('data-base');
+    if(baseAttr) return Number(baseAttr);
+    const cur = unfmt(el.textContent)||0;
+    el.setAttribute('data-base', cur);
+    return cur;
+  }
+  function update(){
+    const el = document.getElementById('kMonthly');
+    if(!el) return;
+    const Rm = unfmt(document.getElementById('R')?.value||'')||0;
+    el.textContent = fmtMoney(baseMonthly() + Rm);
+  }
+  document.getElementById('R')?.addEventListener('input', update);
+  const prev = window.applyBackendSummary;
+  window.applyBackendSummary = function(s){ prev && prev(s); baseMonthly(); update(); };
+})();
+
+</script>
+
+<script>
+(function(){
+  var g = document.getElementById('grace');
+  if(g) g.addEventListener('blur', function(){
+    var v = (g.value||'').replace(/[^0-9]/g,'');
+    if(v.length>1) v = v.replace(/^0+/, '');
+    g.value = v;
+  });
+  var min = '2025-08-19';
+  Array.from(document.querySelectorAll('input[type="date"]')).forEach(function(el){
+    try{ if(!el.min) el.min = min; }catch(e){}
+    el.addEventListener('change', function(){
+      if(el.value && el.value < min) { alert('Date cannot be earlier than today.'); el.value = min; }
+    });
+  });
+})();
+</script>
+
+
+<script>
+// v13.18 uplift toggle behavior
+(function(){
+  const cb = document.getElementById('upliftEnable');
+  const wrap = cb && cb.closest('label.switch');
+  const type = document.getElementById('upliftType');
+  const val = document.getElementById('upliftValue');
+  const mon = document.getElementById('upliftMonths');
+  const chip = document.getElementById('upliftChip');
+  function sync(){
+    if(!cb) return;
+    if(wrap){ wrap.classList.toggle('on', cb.checked); }
+    [type,val,mon].forEach(el=>{ if(el) el.disabled = !cb.checked; });
+    if(cb.checked && type && val && mon){
+      const t = type.value==='%'? `${val.value||0}%` : `+${val.value||0}`;
+      chip.textContent = `Applied: ${t} for ${mon.value||0} month(s)`; chip.style.display='inline-block';
+    } else { chip.style.display='none'; }
+  }
+  if(cb){ cb.addEventListener('change', sync); sync(); }
+  ['upliftType','upliftValue','upliftMonths'].forEach(id=>{ const el=document.getElementById(id); if(el) el.addEventListener('input', sync); });
+})();
+</script>
+
+
+<script>
+// v13.18: fleet qty input mirrors to header tag & Scenario Actions; draft suffixes; scenario tabs
+(function(){
+  // Fleet qty mirror
+  const qty = document.getElementById('fleetQty');
+  const headerTag = Array.from(document.querySelectorAll('.tag')).find(t=>/Vehicles:/i.test(t.textContent));
+  function syncFleet(){
+    if(!qty || !headerTag) return;
+    const v = (qty.value||'').replace(/[^0-9]/g,'') || '0';
+    headerTag.innerHTML = 'Vehicles: ' + v;
+    const m = document.getElementById('fleetCountMirror'); if(m) m.textContent = v;
+  }
+  if(qty){ qty.addEventListener('input', syncFleet); syncFleet(); }
+
+
+  // Scenario tabs
+  const root = document.getElementById('actionsRoot');
+  if(root){
+    const tabs = root.querySelectorAll('.tab');
+    const panels = root.querySelectorAll('.panel');
+    const show = (tab)=>{ tabs.forEach(t=>t.setAttribute('aria-selected', String(t===tab)));
+      panels.forEach(p=>p.setAttribute('aria-hidden', String(p.id !== tab.getAttribute('aria-controls'))));
+      ['offForm','resForm','payForm'].forEach(id=>{ var el=document.getElementById(id); if(el) el.style.display='none'; });
+    };
+    tabs.forEach(t=> t.addEventListener('click', ()=> show(t)));
+    document.getElementById('openOff')?.addEventListener('click', ()=>{ document.getElementById('offForm').style.display='grid'; });
+    document.getElementById('openRes')?.addEventListener('click', ()=>{ document.getElementById('resForm').style.display='grid'; });
+    document.getElementById('openPay')?.addEventListener('click', ()=>{ document.getElementById('payForm').style.display='grid'; });
+    document.getElementById('fleetCancel')?.addEventListener('click', ()=>{ document.getElementById('offForm').style.display='none'; });
+    document.getElementById('resCancel')?.addEventListener('click', ()=>{ document.getElementById('resForm').style.display='none'; });
+    document.getElementById('payoutCancel')?.addEventListener('click', ()=>{ document.getElementById('payForm').style.display='none'; });
+    document.getElementById('fleetApply')?.addEventListener('click', ()=>{
+      const rem = parseInt((document.getElementById('fleetRemoveCount').value||'0').replace(/[^0-9]/g,''))||0;
+      const cur = parseInt((qty?.value||'12').replace(/[^0-9]/g,''))||0;
+      const next = Math.max(0, cur - rem);
+      if(qty){ qty.value = String(next); syncFleet(); }
+      try{ logEvent(`Off-board ${rem} vehicle(s). Fleet → ${next}`);}catch{}
+      document.getElementById('offForm').style.display='none';
+    });
+    document.getElementById('resApply')?.addEventListener('click', ()=>{
+      const mm = document.getElementById('resMonth').value||'—';
+      const nn = document.getElementById('resTenure').value||'—';
+      const rr = document.getElementById('resRate').value||'—';
+      try{ logEvent(`Restructure from m${mm}: Tenure ${nn}, rᶜ ${rr}`);}catch{}
+      document.getElementById('resForm').style.display='none';
+    });
+    document.getElementById('payoutCalc')?.addEventListener('click', ()=>{
+      const e = Math.max(0, (unfmt(document.getElementById('gross').value) - unfmt(document.getElementById('dpAmount').value)));
+      const n = parseInt((document.getElementById('tenure').value||'0').replace(/[^0-9]/g,''))||0;
+      const asof = parseInt((document.getElementById('payoutMonth').value||'0').replace(/[^0-9]/g,''))||0;
+      const r = (parseFloat((document.getElementById('payoutDisc').value||'0').replace(/[^0-9.]/g,''))||0)/100;
+      const remaining = Math.max(0, n - asof);
+      const df = Math.pow(1+r, remaining/12);
+      const payout = e/df;
+      document.getElementById('payoutResult').value = fmtMoney(payout);
+      try{ logEvent(`Payout as of m${asof}: ${fmtMoney(payout)} (disc ${r*100}%)`);}catch{}
+    });
+  }
+})();
+</script>
+
+
+<script>
+// v13.18 Sanity check - placeholder equilibrium verification
+(function(){
+  function recomputeSanity(){
+    const gross = unfmt($('#gross').value);
+    const vr = unfmt($('#vatRate').value)/100;
+    const net = gross/(1+vr)||0;
+    const vatAsset = gross - net;
+    const vatDeltaInput = (document.getElementById('vatDelta')?.value)||'0';
+    const f = unfmt(vatDeltaInput);
+    // Very simplified VAT on IPA proxy: (Monthly PMT incl. TSF)*n*VAT% (static demo)
+    const n = parseInt(($('#tenure').value||'0').replace(/[^0-9]/g,''))||0;
+    const baseMonthly = unfmt($('#kMonthly').textContent||'0');
+    const vatIpa = n * baseMonthly * vr;
+    $('#sanVatAsset').value = fmtMoney(vatAsset);
+    $('#sanVatDelta').value = fmtMoney(f);
+    $('#sanVatIpa').value = fmtMoney(vatIpa);
+    const ok = Math.abs(vatIpa - (vatAsset + f)) < 1;
+    $('#sanEq').textContent = ok ? 'OK' : 'Needs recalculation';
+    $('#sanEq').style.color = ok ? 'green' : 'var(--err)';
+  }
+  ['gross','vatRate','tenure'].forEach(id=> document.getElementById(id)?.addEventListener('input', recomputeSanity));
+  setInterval(recomputeSanity, 1000);
+})();
+</script>
+
+
+<script>
+// v13.18: CF recompute, Sanity++ (P,Q,F), Draft suffixes
+(function(){
+  function val(id){ var el=document.getElementById(id); if(!el) return 0; var v=(el.value||el.textContent||'0'); return unfmt(v); }
+  function isOn(id){ var el=document.getElementById(id); return !!(el && el.classList && el.classList.contains('on')); }
+  function setTxt(id, amt){ var el=document.getElementById(id); if(el) el.textContent = fmtMoney(amt); }
+
+  window.computeCF = function(){
+    try{
+      const gross = val('gross');
+      const dp = val('dpAmount');
+      const vr = val('vatRate')/100;
+      const dNet = gross/(1+vr) || 0;
+
+      const G = val('G'), H = val('H'), I = val('I'), J = val('J');
+      const X = Math.max(0, gross - dp);
+      const fAmt = document.getElementById('vatDelta') ? val('vatDelta') : 0;
+      const Frate = (document.getElementById('F') ? val('F') : 0)/100;
+      const Famt = dNet * Frate;
+      const Y1 = document.getElementById('insY1') ? val('insY1') : 0;
+      const Y2 = (document.getElementById('insY2Enable') && document.getElementById('insY2Enable').checked) ? val('insY2') : 0;
+      const Y3 = (document.getElementById('insY3Enable') && document.getElementById('insY3Enable').checked) ? val('insY3') : 0;
+      const Pamt = Y1 + Y2 + Y3;
+      const Qamt = document.getElementById('Q') ? val('Q') : 0;
+
+      const fixed = G+H+I+J+X+fAmt+Famt+Pamt+Qamt;
+      setTxt('knownSubtotal', fixed);
+      setTxt('cfG', G); setTxt('cfH', H); setTxt('cfI', I); setTxt('cfJ', J);
+      setTxt('cfX', X); setTxt('cfLowerF', fAmt); setTxt('cfF', Famt);
+      setTxt('cfP', Pamt); setTxt('cfQ', Qamt);
+
+      const e = Math.max(0, gross - dp);
+      const tee = isOn('switch-tee');
+      const Lrate = val('L')/100;
+      const Lamt = tee ? e*Lrate : 0; setTxt('cfL', Lamt);
+
+      const Krate = val('K')/100, Kmult = val('Kmult');
+      const Kamt = e * Krate * Kmult; setTxt('cfK', Kamt);
+
+      const Mrate = val('M')/100;
+      const Mamt = (e + fixed) * Mrate; setTxt('cfM', Mamt);
+
+      const c = (window.__ENGINE__ && window.__ENGINE__.summary && window.__ENGINE__.summary.totalInterest) ? window.__ENGINE__.summary.totalInterest : 0;
+      const Nrate = val('N')/100;
+      const Namt = c * Nrate; setTxt('cfN', Namt);
+
+      // O excluded from (g)
+      setTxt('cfTotal', fixed + Lamt + Kamt + Mamt + Namt);
+    }catch(e){ console.warn('computeCF()', e); }
+  };
+
+
+  // Enhanced Sanity: hidden details behind a button; checks VAT equilibrium + P/Q/F delta vs engine targets
+  (function(){
+    const card = document.getElementById('sanTitle')?.closest('.card'); if(!card) return;
+    const body = card.querySelector('.body');
+    // Insert button + status
+    const ctr = document.createElement('div'); ctr.className='row'; ctr.style.justifyContent='space-between'; ctr.style.alignItems='center';
+    const btn = document.createElement('button'); btn.className='btn'; btn.textContent='Run sanity check';
+    const stat = document.createElement('span'); stat.id='sanOverall'; stat.className='hint'; stat.textContent='—';
+    ctr.append(btn, stat); body.insertBefore(ctr, body.firstChild);
+
+    const details = document.createElement('div'); details.id='sanDetails'; details.style.display='none'; details.innerHTML = `
+      <div class="g3" style="margin-top:8px">
+        <div><label>P target / actual / Δ</label><input class="num" id="sanPTarget" type="text" value="—" readonly></div>
+        <div><label></label><input class="num" id="sanPActual" type="text" value="—" readonly></div>
+        <div><label></label><input class="num" id="sanPDelta" type="text" value="—" readonly></div>
+        <div><label>Q target / actual / Δ</label><input class="num" id="sanQTarget" type="text" value="—" readonly></div>
+        <div><label></label><input class="num" id="sanQActual" type="text" value="—" readonly></div>
+        <div><label></label><input class="num" id="sanQDelta" type="text" value="—" readonly></div>
+        <div><label>F target / actual / Δ</label><input class="num" id="sanFTarget" type="text" value="—" readonly></div>
+        <div><label></label><input class="num" id="sanFActual" type="text" value="—" readonly></div>
+        <div><label></label><input class="num" id="sanFDelta" type="text" value="—" readonly></div>
+      </div>`;
+    body.appendChild(details);
+
+    function run(){
+      // Pull actuals from CF
+      const pActual = unfmt(document.getElementById('cfP')?.textContent||'0');
+      const qActual = unfmt(document.getElementById('cfQ')?.textContent||'0');
+      const fActual = unfmt(document.getElementById('cfF')?.textContent||'0');
+      // Targets from engine (if present)
+      const tsf = (window.__ENGINE__ && window.__ENGINE__.summary && (window.__ENGINE__.summary.tsf || window.__ENGINE__.summary.TSF)) || {};
+      const pT = tsf.P ?? null, qT = tsf.Q ?? null, fT = tsf.F ?? null;
+      // Write fields (show "—" when null)
+      document.getElementById('sanPTarget').value = pT==null ? '—' : fmtMoney(pT);
+      document.getElementById('sanPActual').value = fmtMoney(pActual);
+      document.getElementById('sanPDelta').value  = pT==null ? '—' : fmtMoney(pActual - pT);
+
+      document.getElementById('sanQTarget').value = qT==null ? '—' : fmtMoney(qT);
+      document.getElementById('sanQActual').value = fmtMoney(qActual);
+      document.getElementById('sanQDelta').value  = qT==null ? '—' : fmtMoney(qActual - qT);
+
+      document.getElementById('sanFTarget').value = fT==null ? '—' : fmtMoney(fT);
+      document.getElementById('sanFActual').value = fmtMoney(fActual);
+      document.getElementById('sanFDelta').value  = fT==null ? '—' : fmtMoney(fActual - fT);
+
+      // VAT equilibrium status already present
+      const vatEqOK = /OK/i.test(document.getElementById('sanEq')?.textContent||'');
+      const tol = 1; // currency units
+      const pOK = (pT==null) ? true : Math.abs(pActual - pT) <= tol;
+      const qOK = (qT==null) ? true : Math.abs(qActual - qT) <= tol;
+      const fOK = (fT==null) ? true : Math.abs(fActual - fT) <= tol;
+      const allOK = vatEqOK && pOK && qOK && fOK;
+      stat.textContent = allOK ? '✓ OK' : 'Needs attention';
+      stat.style.color = allOK ? 'green' : 'var(--err)';
+      details.style.display = allOK ? 'none' : 'block';
+    }
+    btn.addEventListener('click', function(){ computeCF(); run(); });
+    // Also recompute when engine summary arrives
+    window.__runSanity = run;
+  })();
+
+  // Wire recompute triggers
+  ['gross','vatRate','dpAmount','insY1','insY2','insY3','F','Q','L','K','Kmult','M','N'].forEach(id=>{
+    var el=document.getElementById(id); if(el) el.addEventListener('input', computeCF);
+  });
+  document.getElementById('insY2Enable')?.addEventListener('change', computeCF);
+  document.getElementById('insY3Enable')?.addEventListener('change', computeCF);
+  document.getElementById('switch-tee')?.addEventListener('click', function(){ setTimeout(computeCF,0); });
+
+  // Kick once on load
+  computeCF();
+})();
+
+// Override backend painter to also refresh CF and sanity
+window.applyBackendSummary = function(summary){
+  if(summary && typeof summary.monthly==='number'){
+    var rVal = unfmt(document.getElementById('R') ? document.getElementById('R').value : 0);
+    document.getElementById('kMonthly').textContent = fmtMoney(summary.monthly + rVal);
+  }
+  if(summary?.effRate!=null) document.getElementById('kEffRate').textContent=fmtPct(summary.effRate,2)+'%';
+  if(summary?.irr!=null) document.getElementById('kIrr').textContent=fmtPct(summary.irr,2)+'%';
+  if(summary?.eqAccuracy!=null) document.getElementById('eqAcc').value=summary.eqAccuracy;
+  if(summary?.tsfAccuracy!=null) document.getElementById('tsfAcc').value=summary.tsfAccuracy;
+  window.__ENGINE__ = {summary: summary};
+  // refresh
+  if(window.computeCF) window.computeCF();
+  if(window.__runSanity) window.__runSanity();
+};
+</script>
+
+</body>
+</html>

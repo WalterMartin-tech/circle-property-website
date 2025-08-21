@@ -1,0 +1,102 @@
+import io
+import traceback
+from typing import Optional
+
+from fastapi import APIRouter, Depends, Header, HTTPException, Request
+from fastapi.responses import StreamingResponse
+from openpyxl import Workbook
+from reportlab.pdfgen import canvas
+
+from backend.apps.auth.routes import require_auth
+from backend.core.calculations.ipa_engine.engine import Inputs, run_calc
+
+router = APIRouter()
+
+
+@router.post("/calculate")
+async def calculate(req: Request, _=Depends(require_auth)):
+    body = await req.json()
+    try:
+        inp = Inputs(
+            principal=float(
+                body.get("principal", 0) or body.get("Inputs__principal", 0)
+            ),
+            rate=float(body.get("rate", 0) or body.get("Inputs__rate", 0)),
+            term_months=int(
+                body.get("term_months", 0) or body.get("Inputs__term_months", 0)
+            ),
+            balloon=float(body.get("balloon", 0) or body.get("Inputs__balloon", 0)),
+            vat_rate=float(
+                body.get("vat_rate", 0.18) or body.get("Inputs__vat_rate", 0.18)
+            ),
+            asset_vat=float(
+                body.get("asset_vat", 0) or body.get("Inputs__asset_vat", 0)
+            ),
+            telematics_monthly=float(
+                body.get("telematics_monthly", 0)
+                or body.get("Inputs__telematics_monthly", 0)
+            ),
+            include_irc=bool(
+                body.get("include_irc", True)
+                if body.get("include_irc", True) is not None
+                else True
+            ),
+            include_banking=bool(
+                body.get("include_banking", True)
+                if body.get("include_banking", True) is not None
+                else True
+            ),
+        )
+    except Exception:
+        print("⚠️ Failed to parse Inputs:", traceback.format_exc())
+        inp = body
+
+    res = run_calc(inp)
+    if not isinstance(res.get("totals"), dict):
+        t = {}
+        for k in ("annuity", "ipa_vat", "asset_vat", "vat_delta"):
+            if k in res:
+                t[k] = res[k]
+        res["totals"] = t
+    return res
+
+
+@router.post("/export/xlsx")
+async def export_xlsx(req: Request, _=Depends(require_auth)):
+    data = await req.json()
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Calculation"
+    ws["A1"] = "Example Metric"
+    ws["B1"] = "Another"
+    ws["A2"] = 123.45
+    ws["B2"] = 67.89
+    ws["A4"] = "Payload Echo"
+    ws["B4"] = str(data)
+
+    buf = io.BytesIO()
+    wb.save(buf)
+    buf.seek(0)
+    headers = {"Content-Disposition": 'attachment; filename="calculation.xlsx"'}
+    return StreamingResponse(
+        buf,
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        headers=headers,
+    )
+
+
+@router.post("/export/pdf")
+async def export_pdf(req: Request, _=Depends(require_auth)):
+    data = await req.json()
+    buf = io.BytesIO()
+    c = canvas.Canvas(buf)
+    c.setFont("Helvetica", 12)
+    c.drawString(72, 800, "IPA Calculator - Demo PDF")
+    c.drawString(72, 780, "Example Metric: 123.45")
+    c.drawString(72, 760, "Another: 67.89")
+    c.drawString(72, 740, f"Payload: {str(data)[:80]}...")
+    c.showPage()
+    c.save()
+    buf.seek(0)
+    headers = {"Content-Disposition": 'attachment; filename="calculation.pdf"'}
+    return StreamingResponse(buf, media_type="application/pdf", headers=headers)

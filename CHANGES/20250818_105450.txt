@@ -1,0 +1,5 @@
+A	business/Sindbad/ERP/Calculators/IC/IPA-IC1/standalone/v11.6/ipa-calculator-ivc-v11-6.html
+A	business/Sindbad/ERP/Calculators/IC/IPA-IC1/standalone/v11.6/ivc-hotfix-v115-5.20250817_174646.css
+A	business/Sindbad/ERP/Calculators/IC/IPA-IC1/standalone/v11.6/ivc-hotfix-v115-5.20250817_174646.js
+A	business/Sindbad/ERP/Calculators/IC/IPA-IC1/standalone/v11.6/ivc-hotfix-v115-5.css
+A	business/Sindbad/ERP/Calculators/IC/IPA-IC1/standalone/v11.6/ivc-hotfix-v115-5.js

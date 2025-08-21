@@ -1,0 +1,4 @@
+M	business/Sindbad/ERP/Calculators/IC/IPA-IC1/frontend/public/v11.6/ipa-calculator-ivc-v11-6.html
+A	business/Sindbad/ERP/Calculators/IC/IPA-IC1/frontend/public/v11.6/ivc-app-v116.js
+A	business/Sindbad/ERP/Calculators/IC/IPA-IC1/frontend/public/v11.6/ivc-hotfix-v116-layout.js
+A	business/Sindbad/ERP/Calculators/IC/IPA-IC1/frontend/public/v11.6/src/ivc-app-v116.jsx

@@ -1,3 +1,45 @@
+
+---
+
+## 🔑 Workflow Rules
+
+- **`frontend/`** → Only **source code** (React/Next.js, TypeScript).
+  - Run locally with:
+    ```bash
+    cd frontend
+    npm install
+    npm run dev
+    ```
+
+- **`backend/`** → FastAPI app (calculation engine, endpoints).
+  - Run locally with:
+    ```bash
+    cd backend
+    uvicorn app.main:app --reload
+    ```
+
+- **`builds/`** → Only **canonical frozen HTML builds**.
+  - Each file is versioned: `ipa-ic1-vX.Y.html`.
+  - Example: `ipa-ic1-v13.11.html` (first clean baseline).
+  - Always tagged in Git (`git tag v13.11`).
+
+- **`patches/`** → For drafts, hotfixes, `.bak` files, or experimental drops.
+  - Ignored by Git, so you can throw anything in here.
+  - Old builds (v11.x, v12.0) are archived here under `old_builds/`.
+
+---
+
+## 🚀 Versioning Strategy
+
+- New baseline = commit + tag:
+  ```bash
+  git add builds/ipa-ic1-v13.12.html
+  git commit -m "build(v13.12): new baseline"
+  git tag v13.12
+
+
+
+
 # IPA Calculator — Architecture Overview
 
 ## Overview

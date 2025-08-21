@@ -1,0 +1,4 @@
+!patches/.gitkeep
+# Ignore drafts and patches
+patches/
+!patches/.gitkeep
