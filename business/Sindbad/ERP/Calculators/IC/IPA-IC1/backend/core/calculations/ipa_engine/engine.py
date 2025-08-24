@@ -1,26 +1,30 @@
-from dataclasses import asdict, dataclass
 from typing import Dict, List
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
-@dataclass
-class Inputs:
-    # Core inputs (C, rc, n, balloon)
-    principal: float  # Final Financing Amount C
-    rate: float  # rc (decimal), e.g. 0.12
-    term_months: int  # n
-    balloon: float = 0.0  # balloon due at end
+# --- Pydantic model replaces dataclass ---
+class Inputs(BaseModel):
+    # Core inputs
+    principal: float = Field(..., gt=0, description="Final Financing Amount")
+    rate: float = Field(
+        ..., gt=0, description="Annual interest rate (decimal, e.g. 0.12)"
+    )
+    term_months: int = Field(..., gt=0, description="Number of months in term")
+    balloon: float = Field(0.0, ge=0, description="Balloon due at end")
+
     # VAT / reporting
     vat_rate: float = 0.18
-    asset_vat: float = 0.0  # E
+    asset_vat: float = 0.0
+
     # TSF knobs (monthly, non-capitalized flows)
-    telematics_monthly: float = 10_000.0  # R
-    include_irc: bool = True  # N'
-    include_banking: bool = True  # O'
+    telematics_monthly: float = 10_000.0
+    include_irc: bool = True
+    include_banking: bool = True
+
     # Approximations for monthly TSF
-    irc_rate: float = 0.18  # 18% on monthly interest (N')
-    banking_rate: float = 0.026  # 2.6% on (C/n + monthly interest) (O')
+    irc_rate: float = 0.18  # 18% on monthly interest
+    banking_rate: float = 0.026  # 2.6% on (C/n + monthly interest)
 
 
 def pmt_with_balloon(pv: float, rate_annual: float, n: int, fv: float = 0.0) -> float:
@@ -28,7 +32,6 @@ def pmt_with_balloon(pv: float, rate_annual: float, n: int, fv: float = 0.0) -> 
     i = rate_annual / 12.0
     if n <= 0:
         return 0.0
-    # PMT = i*(pv - fv/(1+i)^n) / (1 - (1+i)^-n)
     denom = 1.0 - (1.0 + i) ** (-n)
     adj_pv = pv - fv / ((1.0 + i) ** n)
     return (i * adj_pv) / denom
@@ -44,17 +47,16 @@ def run_calc(inp: Inputs) -> Dict:
 
     for m in range(1, inp.term_months + 1):
         interest = outstanding * i
-        irc_m = (inp.irc_rate * interest) if inp.include_irc else 0.0  # N'
+        irc_m = (inp.irc_rate * interest) if inp.include_irc else 0.0
         bank_m = (
             (inp.banking_rate * ((inp.principal / inp.term_months) + interest))
             if inp.include_banking
             else 0.0
-        )  # O'
-        tsf = inp.telematics_monthly + irc_m + bank_m  # R + N' + O'
-        capital = annuity - interest - tsf  # Capital can be < 0 (negative amortization)
+        )
+        tsf = inp.telematics_monthly + irc_m + bank_m
+        capital = annuity - interest - tsf
         outstanding = outstanding - capital
 
-        # Identity check: AP == Interest + TSF + Capital
         if abs((interest + tsf + capital) - annuity) > 1e-6:
             annuity_identity_ok = False
 
@@ -69,20 +71,18 @@ def run_calc(inp: Inputs) -> Dict:
             }
         )
 
-    # IPA totals (net of VAT): sum of annuities + balloon
     ipa_net = annuity * inp.term_months + inp.balloon
     vat_ipa = inp.vat_rate * ipa_net
-    vat_delta = vat_ipa - inp.asset_vat  # = VAT(IPA) - VAT(Asset)
+    vat_delta = vat_ipa - inp.asset_vat
 
-    out = {
-        "inputs": asdict(inp),
+    return {
+        "inputs": inp.model_dump(),  # Pydantic replacement for asdict
         "annuity": round(annuity, 2),
-        "ipa_net": round(ipa_net, 2),  # d
-        "ipa_vat": round(vat_ipa, 2),  # VAT on total IPA
-        "asset_vat": round(inp.asset_vat, 2),  # E
-        "vat_delta": round(vat_delta, 2),  # f = VAT(IPA) - VAT(Asset)
-        "annuity_identity_ok": annuity_identity_ok,  # spec: AP = Interest + TSF + Capital
-        "schedule": rows[:12],  # head (avoid huge payloads)
+        "ipa_net": round(ipa_net, 2),
+        "ipa_vat": round(vat_ipa, 2),
+        "asset_vat": round(inp.asset_vat, 2),
+        "vat_delta": round(vat_delta, 2),
+        "annuity_identity_ok": annuity_identity_ok,
+        "schedule": rows[:12],
         "outstanding_final": round(outstanding, 2),
     }
-    return out

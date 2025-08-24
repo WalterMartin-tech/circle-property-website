@@ -2,7 +2,11 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Tuple
 
-from app.ipa_engine.engine import Inputs, run_calc  # existing engine
+from backend.core.calculations.ipa_engine.engine import Inputs, run_calc
+
+# ------------------------
+# Helpers
+# ------------------------
 
 
 def solve_bisect(
@@ -48,7 +52,7 @@ def _to_dict(x: Any) -> Dict[str, Any]:
             return asdict(x)
     except Exception:
         pass
-    # best-effort JSON round-trip
+    # fallback JSON round-trip
     try:
         import json
 
@@ -66,7 +70,7 @@ def vat_from_result(result: Dict[str, Any]) -> float:
             return float(result["ipa_vat"])
         except Exception:
             pass
-    # 2) fallback: vat_delta + asset_vat (common in your engine)
+    # 2) fallback: vat_delta + asset_vat
     if isinstance(result, dict):
         vd = result.get("vat_delta")
         av = result.get("asset_vat") or 0
@@ -77,11 +81,17 @@ def vat_from_result(result: Dict[str, Any]) -> float:
             pass
     # 3) totals.vat
     totals = result.get("totals") or {}
-    if isinstance(totals, dict) and "vat" in totals:
-        try:
-            return float(totals["vat"])
-        except Exception:
-            pass
+
+
+def get_vat_fields(result: dict) -> dict:
+    """Extract VAT-related totals in a consistent way."""
+    totals = result.get("totals") or {}
+    return {
+        "ipa_vat": float(totals.get("ipa_vat") or 0),
+        "asset_vat": float(totals.get("asset_vat") or 0),
+        "vat_delta": float(totals.get("vat_delta") or 0),
+    }
+
     # 4) sum row.vat
     sched: List[Dict[str, Any]] = result.get("schedule") or result.get("lines") or []
     ssum = 0.0
@@ -113,7 +123,6 @@ def vat_asset(payload: Dict[str, Any]) -> float:
 
 
 def run_once(payload: Dict[str, Any]) -> Dict[str, Any]:
-    # Pass only keys that Inputs accepts (mirror your /calculate_public output)
     allowed = {
         "principal",
         "rate",
@@ -138,14 +147,9 @@ def run_once(payload: Dict[str, Any]) -> Dict[str, Any]:
     return _to_dict(res)
 
 
-def equilibrium_error_for_principal(payload_base: Dict[str, Any]):
-    def err(principal_candidate: float) -> float:
-        p = dict(payload_base)
-        p["principal"] = principal_candidate
-        result = run_once(p)
-        return vat_from_result(result) - vat_asset(p)
-
-    return err
+# ------------------------
+# Principal Equilibrium
+# ------------------------
 
 
 def solve_equilibrium_principal(
@@ -155,17 +159,29 @@ def solve_equilibrium_principal(
     tol: float = 0.01,
     max_iter: int = 64,
 ) -> Dict[str, Any]:
+    """
+    Solve principal such that VAT(IPA) = VAT(asset).
+    lhs = VAT(IPA), rhs = VAT(asset).
+    """
     original = float(payload.get("principal", 0.0))
     if original <= 0:
         raise ValueError("principal must be > 0")
-    err = equilibrium_error_for_principal(payload)
-    lo, hi = original * lo_factor, original * hi_factor
 
+    def equilibrium_error(principal_candidate: float) -> float:
+        p = dict(payload)
+        p["principal"] = principal_candidate
+        r = run_once(p)
+        lhs = vat_from_result(r)
+        rhs = vat_asset(p)
+        return lhs - rhs
+
+    lo, hi = original * lo_factor, original * hi_factor
     ok = False
+
     for _ in range(6):
         try:
-            root, iters, f_lo, f_hi = solve_bisect(
-                err, lo, hi, tol=tol, max_iter=max_iter
+            root, iters, _, _ = solve_bisect(
+                equilibrium_error, lo, hi, tol=tol, max_iter=max_iter
             )
             ok = True
             break
@@ -174,56 +190,70 @@ def solve_equilibrium_principal(
             hi *= 1.5
 
     if not ok:
-        result = run_once(payload)
+        r = run_once(payload)
+        lhs = vat_from_result(r)
+        rhs = vat_asset(payload)
         return {
-            "result": result,
+            "result": r,
             "equilibrium": {
                 "ok": False,
                 "message": "Could not bracket a root for principal",
                 "principal_original": original,
                 "principal_solved": original,
-                "error_abs": round(abs(err(original)), 4),
+                "lhs": round(lhs, 2),
+                "rhs": round(rhs, 2),
+                "error_abs": round(abs(lhs - rhs), 4),
             },
         }
 
     solved = round(root, 2)
     payload_solved = dict(payload)
     payload_solved["principal"] = solved
-    result = run_once(payload_solved)
-    eq_error = abs(err(solved))
+    r = run_once(payload_solved)
+    lhs = vat_from_result(r)
+    rhs = vat_asset(payload)
+    err_abs = abs(lhs - rhs)
 
     return {
-        "result": result,
+        "result": r,
         "equilibrium": {
-            "ok": eq_error <= tol,
+            "ok": err_abs <= tol,
             "tolerance": tol,
             "iterations": iters,
             "principal_original": original,
             "principal_solved": solved,
-            "error_abs": round(eq_error, 4),
+            "lhs": round(lhs, 2),
+            "rhs": round(rhs, 2),
+            "error_abs": round(err_abs, 4),
         },
     }
+
+
+# ------------------------
+# f Equilibrium
+# ------------------------
 
 
 def solve_equilibrium_f(payload: Dict[str, Any]) -> Dict[str, Any]:
     """
     Direct equilibrium on VAT delta f:
-    f* = VAT(IPA) - VAT(asset). No iteration (engine currently doesn't take `f`).
+    lhs = VAT(IPA), rhs = VAT(asset) + f.
     """
-    result = run_once(payload)
-    result_dict = result if isinstance(result, dict) else _to_dict(result)
-    v_ipa = vat_from_result(result_dict)
-    v_asset = vat_asset(payload)
-    f_star = round(v_ipa - v_asset, 2)
+    r = run_once(payload)
+    r_dict = r if isinstance(r, dict) else _to_dict(r)
+    lhs = vat_from_result(r_dict)
+    rhs = vat_asset(payload)
+    f_star = round(lhs - rhs, 2)
     return {
-        "result": result_dict,
+        "result": r_dict,
         "equilibrium": {
             "method": "f_direct",
             "ok": True,
-            "vat_ipa": round(v_ipa, 2),
-            "vat_asset": round(v_asset, 2),
+            "lhs": round(lhs, 2),
+            "rhs": round(rhs + f_star, 2),
+            "vat_asset": round(rhs, 2),
             "f_solved": f_star,
-            "error_abs": round(abs(v_ipa - (v_asset + f_star)), 4),
+            "error_abs": round(abs(lhs - (rhs + f_star)), 4),
         },
     }
 
@@ -238,8 +268,9 @@ def solve_equilibrium_f_bisect(
     """
     Solve VAT equilibrium for f such that VAT(IPA) = VAT(asset) + f.
     Attempts bisection if helpers exist, otherwise falls back to direct f*.
+    Returns consistent keys: lhs, rhs, f_solved, tolerance, iterations.
     """
-    try:
+    try:  # pragma: no cover
         # try true bisection if helpers are present
         err = equilibrium_error_for_f(payload)  # type: ignore[name-defined]
         # choose center near direct f0
@@ -249,9 +280,13 @@ def solve_equilibrium_f_bisect(
             f0 = float(around)
         lo, hi = f0 - span, f0 + span
         try:
-            root, iters = solve_bisect(err, lo, hi, tol=tol, max_iter=max_iter)  # type: ignore[name-defined]
+            root, iters, f_lo, f_hi = solve_bisect(
+                err, lo, hi, tol=tol, max_iter=max_iter
+            )  # type: ignore[name-defined]
             f_star = round(root, 2)
             r = run_once({**payload})
+            lhs = vat_from_result(r)
+            rhs_base = vat_asset(payload)
             err_abs = abs(err(f_star))
             return {
                 "result": r,
@@ -260,8 +295,9 @@ def solve_equilibrium_f_bisect(
                     "ok": err_abs <= tol,
                     "tolerance": tol,
                     "iterations": iters,
-                    "vat_ipa": round(vat_from_result(r), 2),
-                    "vat_asset": round(vat_asset(payload), 2),
+                    "lhs": round(lhs, 2),
+                    "rhs": round(rhs_base + f_star, 2),
+                    "vat_asset": round(rhs_base, 2),
                     "f_solved": f_star,
                     "error_abs": round(err_abs, 4),
                 },
@@ -271,17 +307,22 @@ def solve_equilibrium_f_bisect(
     except Exception:
         pass  # fall through to direct
 
-    # direct fallback: f* = VAT(IPA) - VAT(asset)
+    # fallback to direct
     r = run_once({**payload})
-    f_star = round(vat_from_result(r) - vat_asset(payload), 2)
+    lhs = vat_from_result(r)
+    rhs_base = vat_asset(payload)
+    f_star = round(lhs - rhs_base, 2)
     return {
         "result": r,
         "equilibrium": {
             "method": "f_direct_fallback",
             "ok": True,
-            "vat_ipa": round(vat_from_result(r), 2),
-            "vat_asset": round(vat_asset(payload), 2),
+            "lhs": round(lhs, 2),
+            "rhs": round(rhs_base + f_star, 2),
+            "vat_asset": round(rhs_base, 2),
             "f_solved": f_star,
+            "tolerance": tol,  # added for consistency
+            "iterations": 0,  # added for consistency
             "error_abs": 0.0,
         },
     }

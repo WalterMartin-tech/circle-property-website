@@ -49,7 +49,7 @@ def _as_dict(res: Any) -> Dict[str, Any]:
     if isinstance(res, dict):
         return res
     try:
-        from app.equilibrium import _to_dict as _td  # type: ignore
+        from backend.core.calculations.equilibrium import _to_dict as _td  # type: ignore
 
         return _td(res)
     except Exception:
@@ -129,7 +129,7 @@ def compute_preview(payload: Dict[str, Any]) -> Dict[str, Any]:
     # try the real f-solver; fall back to direct diff
     eq_obj: Dict[str, Any]
     try:
-        from app.equilibrium import solve_equilibrium_f_bisect  # type: ignore
+        from backend.core.calculations.equilibrium import solve_equilibrium_f_bisect  # type: ignore
 
         eq_res = solve_equilibrium_f_bisect(
             {"principal": d, "term_months": term, "rate": rate, "vat_rate": vat_rate}

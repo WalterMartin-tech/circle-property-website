@@ -1,69 +1,72 @@
 import io
-import traceback
-from typing import Optional
 
-from fastapi import APIRouter, Depends, Header, HTTPException, Request
+from backend.apps.auth.routes import require_auth
+from backend.core.calculations.equilibrium import (
+    solve_equilibrium_f,
+    solve_equilibrium_f_bisect,
+    solve_equilibrium_principal,
+)
+from backend.core.calculations.ipa_engine.engine import Inputs, run_calc
+from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import StreamingResponse
 from openpyxl import Workbook
 from reportlab.pdfgen import canvas
 
-from backend.apps.auth.routes import require_auth
-from backend.core.calculations.ipa_engine.engine import Inputs, run_calc
-
 router = APIRouter()
 
 
+# --- Calculate ---
 @router.post("/calculate")
-async def calculate(req: Request, _=Depends(require_auth)):
-    body = await req.json()
+async def calculate(inp: Inputs, _=Depends(require_auth)):
     try:
-        inp = Inputs(
-            principal=float(
-                body.get("principal", 0) or body.get("Inputs__principal", 0)
-            ),
-            rate=float(body.get("rate", 0) or body.get("Inputs__rate", 0)),
-            term_months=int(
-                body.get("term_months", 0) or body.get("Inputs__term_months", 0)
-            ),
-            balloon=float(body.get("balloon", 0) or body.get("Inputs__balloon", 0)),
-            vat_rate=float(
-                body.get("vat_rate", 0.18) or body.get("Inputs__vat_rate", 0.18)
-            ),
-            asset_vat=float(
-                body.get("asset_vat", 0) or body.get("Inputs__asset_vat", 0)
-            ),
-            telematics_monthly=float(
-                body.get("telematics_monthly", 0)
-                or body.get("Inputs__telematics_monthly", 0)
-            ),
-            include_irc=bool(
-                body.get("include_irc", True)
-                if body.get("include_irc", True) is not None
-                else True
-            ),
-            include_banking=bool(
-                body.get("include_banking", True)
-                if body.get("include_banking", True) is not None
-                else True
-            ),
-        )
-    except Exception:
-        print("⚠️ Failed to parse Inputs:", traceback.format_exc())
-        inp = body
+        res = run_calc(inp)
+    except Exception as e:
+        msg = str(e)
+        if "missing" in msg.lower():
+            raise HTTPException(status_code=400, detail="Missing required field")
+        raise HTTPException(status_code=400, detail=msg)
 
-    res = run_calc(inp)
+    # Backward-compatibility: ensure "totals" dict exists
     if not isinstance(res.get("totals"), dict):
-        t = {}
+        totals = {}
         for k in ("annuity", "ipa_vat", "asset_vat", "vat_delta"):
             if k in res:
-                t[k] = res[k]
-        res["totals"] = t
+                totals[k] = res[k]
+        res["totals"] = totals
+
     return res
 
 
+# --- Equilibrium: principal ---
+@router.post("/equilibrium/principal")
+async def equilibrium_principal(inp: Inputs, _=Depends(require_auth)):
+    try:
+        return solve_equilibrium_principal(inp.model_dump())
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+# --- Equilibrium: f ---
+@router.post("/equilibrium/f")
+async def equilibrium_f(inp: Inputs, _=Depends(require_auth)):
+    try:
+        return solve_equilibrium_f(inp.model_dump())
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+# --- Equilibrium: f_bisect ---
+@router.post("/equilibrium/f_bisect")
+async def equilibrium_f_bisect(inp: Inputs, _=Depends(require_auth)):
+    try:
+        return solve_equilibrium_f_bisect(inp.model_dump())
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+# --- Export XLSX ---
 @router.post("/export/xlsx")
-async def export_xlsx(req: Request, _=Depends(require_auth)):
-    data = await req.json()
+async def export_xlsx(inp: Inputs, _=Depends(require_auth)):
     wb = Workbook()
     ws = wb.active
     ws.title = "Calculation"
@@ -72,7 +75,7 @@ async def export_xlsx(req: Request, _=Depends(require_auth)):
     ws["A2"] = 123.45
     ws["B2"] = 67.89
     ws["A4"] = "Payload Echo"
-    ws["B4"] = str(data)
+    ws["B4"] = str(inp.model_dump())
 
     buf = io.BytesIO()
     wb.save(buf)
@@ -85,16 +88,16 @@ async def export_xlsx(req: Request, _=Depends(require_auth)):
     )
 
 
+# --- Export PDF ---
 @router.post("/export/pdf")
-async def export_pdf(req: Request, _=Depends(require_auth)):
-    data = await req.json()
+async def export_pdf(inp: Inputs, _=Depends(require_auth)):
     buf = io.BytesIO()
     c = canvas.Canvas(buf)
     c.setFont("Helvetica", 12)
     c.drawString(72, 800, "IPA Calculator - Demo PDF")
     c.drawString(72, 780, "Example Metric: 123.45")
     c.drawString(72, 760, "Another: 67.89")
-    c.drawString(72, 740, f"Payload: {str(data)[:80]}...")
+    c.drawString(72, 740, f"Payload: {str(inp.model_dump())[:80]}...")
     c.showPage()
     c.save()
     buf.seek(0)

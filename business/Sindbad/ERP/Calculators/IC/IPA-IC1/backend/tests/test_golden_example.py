@@ -1,25 +1,7 @@
 import json
 
-from app.main import app
-from fastapi.testclient import TestClient
-
-client = TestClient(app)
-
-
-def _token():
-    r = client.post(
-        "/auth/login/json", json={"username": "admin@example.com", "password": "admin"}
-    )
-    assert r.status_code == 200
-    return r.json()["access_token"]
-
-
-def test_golden_example():
-    t = _token()
-    case = json.load(open("tests/cases/example_case.json"))
-    r = client.post(
-        "/calculate", headers={"Authorization": f"Bearer {t}"}, json=case["input"]
-    )
-    assert r.status_code == 200
-    totals = r.json()["totals"]
-    assert totals == case["expected_totals"]
+def test_golden_example(api_client, auth_headers):
+    case = json.load(open("backend/tests/cases/example_case.json"))
+    resp = api_client.post("/calculate", headers=auth_headers, json=case["input"])
+    assert resp.status_code == 200
+    assert resp.json()["totals"] == case["expected_totals"]
