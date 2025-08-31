@@ -1,1 +1,0 @@
-M	business/Sindbad/ERP/Calculators/IC/IPA-IC1/frontend/public/v11.5/ipa-calculator-ivc-v11-5.html

@@ -1,4 +1,0 @@
-M	business/Sindbad/ERP/Calculators/IC/IPA-IC1/backend/app/ipa_engine/engine.py
-M	business/Sindbad/ERP/Calculators/IC/IPA-IC1/backend/app/main.py
-A	business/Sindbad/ERP/Calculators/IC/IPA-IC1/backend/constraints.txt
-M	business/Sindbad/ERP/Calculators/IC/IPA-IC1/backend/requirements.txt

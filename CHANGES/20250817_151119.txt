@@ -1,7 +1,0 @@
-A	CHANGES/20250817_150644.txt
-R100	business/Sindbad/ERP/Calculators/IC/IPA-IC1/frontend/jsconfig.json	business/Sindbad/ERP/Calculators/IC/IPA-IC1/_trash_20250817_150902/jsconfig.json
-R100	business/Sindbad/ERP/Calculators/IC/IPA-IC1/frontend/next-env.d 3.ts	business/Sindbad/ERP/Calculators/IC/IPA-IC1/_trash_20250817_150902/next-env.d 3.ts
-R100	business/Sindbad/ERP/Calculators/IC/IPA-IC1/backend/package-lock 3.json	business/Sindbad/ERP/Calculators/IC/IPA-IC1/_trash_20250817_150902/package-lock 3.json
-R100	business/Sindbad/ERP/Calculators/IC/IPA-IC1/backend/run_ui.sh	business/Sindbad/ERP/Calculators/IC/IPA-IC1/_trash_20250817_150902/run_ui.sh
-R100	business/Sindbad/ERP/Calculators/IC/IPA-IC1/backend/tsconfig.json	business/Sindbad/ERP/Calculators/IC/IPA-IC1/_trash_20250817_150902/tsconfig.json
-R100	business/Sindbad/ERP/Calculators/IC/IPA-IC1/backend/app/engine.py	business/Sindbad/ERP/Calculators/IC/IPA-IC1/_trash_20250817_151058/engine.py
