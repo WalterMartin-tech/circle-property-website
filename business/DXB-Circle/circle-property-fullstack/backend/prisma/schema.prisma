@@ -1,0 +1,322 @@
+// Circle Property Database Schema
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User Management
+model User {
+  id                String   @id @default(cuid())
+  email            String   @unique
+  name             String
+  phone            String?
+  investorType     InvestorType?
+  isEmailVerified  Boolean  @default(false)
+  isActive         Boolean  @default(true)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  lastLoginAt      DateTime?
+
+  // Authentication
+  passwordHash     String?
+  emailVerificationToken String?
+  passwordResetToken     String?
+  passwordResetExpires   DateTime?
+
+  // Profile
+  profile          UserProfile?
+  
+  // Relations
+  portfolios       Portfolio[]
+  consultations    Consultation[]
+  payments         Payment[]
+  quotations       Quotation[]
+  
+  @@map("users")
+}
+
+model UserProfile {
+  id              String @id @default(cuid())
+  userId          String @unique
+  user            User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  company         String?
+  position        String?
+  assets          String?
+  ticketSize      String?
+  preferences     Json?
+  notes           String?
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@map("user_profiles")
+}
+
+// Service Management
+model Service {
+  id              String      @id @default(cuid())
+  name            String
+  category        ServiceCategory
+  description     String
+  price           Decimal?
+  currency        String      @default("AED")
+  billingPeriod   BillingPeriod?
+  isActive        Boolean     @default(true)
+  features        String[]
+  metadata        Json?
+  
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  
+  // Relations
+  portfolioItems  PortfolioItem[]
+  quotationItems  QuotationItem[]
+  
+  @@map("services")
+}
+
+model ServiceBundle {
+  id              String   @id @default(cuid())
+  name            String
+  description     String
+  price           Decimal?
+  currency        String   @default("AED")
+  billingPeriod   BillingPeriod?
+  isActive        Boolean  @default(true)
+  services        String[] // Service IDs included in bundle
+  discount        Decimal? // Discount percentage
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@map("service_bundles")
+}
+
+// Portfolio Management
+model Portfolio {
+  id              String          @id @default(cuid())
+  userId          String
+  user            User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  name            String?
+  status          PortfolioStatus @default(DRAFT)
+  totalAmount     Decimal         @default(0)
+  currency        String          @default("AED")
+  notes           String?
+  
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  
+  // Relations
+  items           PortfolioItem[]
+  quotations      Quotation[]
+  payments        Payment[]
+  
+  @@map("portfolios")
+}
+
+model PortfolioItem {
+  id              String    @id @default(cuid())
+  portfolioId     String
+  portfolio       Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+  
+  serviceId       String
+  service         Service   @relation(fields: [serviceId], references: [id])
+  
+  quantity        Int       @default(1)
+  unitPrice       Decimal
+  totalPrice      Decimal
+  customization   Json?     // Custom parameters for the service
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  @@map("portfolio_items")
+}
+
+// Consultation Management
+model Consultation {
+  id                String             @id @default(cuid())
+  userId            String
+  user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  type              ConsultationType
+  status            ConsultationStatus @default(REQUESTED)
+  preferredDate     DateTime?
+  preferredTime     String?
+  contactMethod     ContactMethod
+  message           String?
+  
+  // Meeting details
+  scheduledAt       DateTime?
+  duration          Int?              // Duration in minutes
+  meetingLink       String?
+  notes             String?
+  
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  
+  @@map("consultations")
+}
+
+// Payment Management
+model Payment {
+  id              String        @id @default(cuid())
+  userId          String
+  user            User          @relation(fields: [userId], references: [id])
+  
+  portfolioId     String?
+  portfolio       Portfolio?    @relation(fields: [portfolioId], references: [id])
+  
+  amount          Decimal
+  currency        String        @default("AED")
+  status          PaymentStatus @default(PENDING)
+  method          PaymentMethod
+  
+  // Payment provider details
+  stripePaymentIntentId String?
+  bankTransferDetails   Json?
+  
+  // Metadata
+  description     String?
+  metadata        Json?
+  
+  processedAt     DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  
+  @@map("payments")
+}
+
+// Quotation Management
+model Quotation {
+  id              String           @id @default(cuid())
+  userId          String
+  user            User             @relation(fields: [userId], references: [id])
+  
+  portfolioId     String?
+  portfolio       Portfolio?       @relation(fields: [portfolioId], references: [id])
+  
+  quotationNumber String           @unique
+  status          QuotationStatus  @default(DRAFT)
+  
+  subtotal        Decimal
+  discountAmount  Decimal          @default(0)
+  totalAmount     Decimal
+  currency        String           @default("AED")
+  
+  validUntil      DateTime?
+  notes           String?
+  terms           String?
+  
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  
+  // Relations
+  items           QuotationItem[]
+  
+  @@map("quotations")
+}
+
+model QuotationItem {
+  id              String    @id @default(cuid())
+  quotationId     String
+  quotation       Quotation @relation(fields: [quotationId], references: [id], onDelete: Cascade)
+  
+  serviceId       String
+  service         Service   @relation(fields: [serviceId], references: [id])
+  
+  description     String
+  quantity        Int       @default(1)
+  unitPrice       Decimal
+  totalPrice      Decimal
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  @@map("quotation_items")
+}
+
+// Enums
+enum InvestorType {
+  HNWI
+  FAMILY_OFFICE
+  PROPERTY_OWNER
+  DEVELOPER
+  INVESTMENT_MANAGER
+}
+
+enum ServiceCategory {
+  PROPERTY_CARE
+  EDUCATION
+  KEYS_ACCESS
+  INSPECTION
+  RESIDENCE
+  LEGAL
+  INSURANCE
+}
+
+enum BillingPeriod {
+  ONE_TIME
+  MONTHLY
+  QUARTERLY
+  ANNUALLY
+}
+
+enum PortfolioStatus {
+  DRAFT
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+enum ConsultationType {
+  GENERAL
+  BESPOKE_QUOTATION
+  SERVICE_DISCUSSION
+  SWITCH_CONSULTATION
+}
+
+enum ConsultationStatus {
+  REQUESTED
+  SCHEDULED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum ContactMethod {
+  PHONE
+  WHATSAPP
+  EMAIL
+  IN_PERSON
+  VIDEO_CONFERENCE
+}
+
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentMethod {
+  CREDIT_CARD
+  BANK_TRANSFER
+  WIRE_TRANSFER
+}
+
+enum QuotationStatus {
+  DRAFT
+  SENT
+  ACCEPTED
+  REJECTED
+  EXPIRED
+}
