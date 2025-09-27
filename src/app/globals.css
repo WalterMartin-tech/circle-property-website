@@ -1,0 +1,196 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+/* Custom utility classes */
+.gradient-text {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hover-lift {
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Focus styles for accessibility */
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Form element contrast fixes */
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="password"],
+input[type="number"],
+textarea,
+select {
+  color: #1e293b !important; /* slate-800 for high contrast */
+  background-color: #ffffff !important;
+  border: 1px solid #cbd5e1 !important; /* slate-300 */
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="tel"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus,
+textarea:focus,
+select:focus {
+  border-color: #3b82f6 !important; /* blue-500 */
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+}
+
+input[type="text"]::placeholder,
+input[type="email"]::placeholder,
+input[type="tel"]::placeholder,
+input[type="password"]::placeholder,
+input[type="number"]::placeholder,
+textarea::placeholder {
+  color: #64748b !important; /* slate-500 for readable placeholders */
+}
+
+/* Labels and form text */
+label {
+  color: #334155 !important; /* slate-700 for good contrast */
+}
+
+/* Select dropdown styling */
+select option {
+  color: #1e293b !important; /* slate-800 */
+  background-color: #ffffff !important;
+}
+
+/* Ensure disabled elements are still readable */
+input:disabled,
+textarea:disabled,
+select:disabled {
+  color: #64748b !important; /* slate-500 */
+  background-color: #f8fafc !important; /* slate-50 */
+  border-color: #e2e8f0 !important; /* slate-200 */
+}
+
+/* Fix any text content that might be too light */
+.text-content p,
+.text-content div,
+.text-content span {
+  color: #334155; /* Default to slate-700 for good readability */
+}
+
+/* Only fix the most problematic light grey text */
+.text-slate-400 {
+  color: #64748b !important; /* Upgrade to slate-500 for better contrast */
+}
+
+/* Additional form element improvements */
+.modal form input,
+.modal form textarea,
+.modal form select,
+.consultation-form input,
+.consultation-form textarea,
+.consultation-form select {
+  color: #1e293b !important; /* slate-800 */
+  background-color: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  padding: 0.75rem !important;
+  border-radius: 0.5rem !important;
+}
+
+.modal form input:focus,
+.modal form textarea:focus,
+.modal form select:focus,
+.consultation-form input:focus,
+.consultation-form textarea:focus,
+.consultation-form select:focus {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+  outline: none !important;
+}
+
+/* Ensure all form labels are dark enough */
+.modal form label,
+.consultation-form label {
+  color: #334155 !important; /* slate-700 */
+  font-weight: 500 !important;
+}
+
+/* Hide development mode indicators and overlays */
+#__next-dev-build-indicator,
+[data-nextjs-app-build-indicator],
+[data-nextjs-build-indicator],
+.__next-dev-build-indicator,
+[data-nextjs-turbopack-indicator],
+[data-nextjs-refresh-indicator] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Hide any floating development elements in bottom corners */
+div[style*="position: fixed"][style*="bottom"][style*="left"],
+div[style*="position: fixed"][style*="bottom: 0"][style*="left: 0"],
+div[style*="position: fixed"][style*="bottom: 16px"][style*="left: 16px"] {
+  display: none !important;
+}
+
+/* Hide Next.js development overlays */
+[data-nextjs-error-overlay],
+[data-nextjs-toast],
+.__next-dev-overlay-portal {
+  display: none !important;
+}
+
+/* Hide Turbopack/Webpack status indicators */
+[id*="turbopack"],
+[id*="webpack"],
+[data-turbopack],
+[data-webpack] {
+  display: none !important;
+}
+
+/* Hide any development mode floating buttons or indicators */
+button[style*="position: fixed"][style*="bottom"],
+div[style*="position: fixed"][style*="z-index: 999"],
+div[style*="position: fixed"][style*="z-index: 9999"] {
+  display: none !important;
+}
