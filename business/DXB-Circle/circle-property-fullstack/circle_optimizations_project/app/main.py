@@ -15,7 +15,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",
-        "https://circle-property-website.vercel.app"
+        "https://circle-property-website.vercel.app",
+        "https://www.beechfordestates.com"  # For future custom domain
     ],
     allow_credentials=True,
     allow_methods=["*"],
