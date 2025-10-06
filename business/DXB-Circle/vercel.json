@@ -1,7 +1,7 @@
 {
-  "buildCommand": "cd circle-property-fullstack/frontend && npm run build",
+  "buildCommand": "cd circle-property-fullstack/frontend && npm install && npm run build",
   "outputDirectory": "circle-property-fullstack/frontend/.next",
-  "framework": "nextjs",
-  "installCommand": "cd circle-property-fullstack/frontend && npm install"
+  "devCommand": "cd circle-property-fullstack/frontend && npm run dev",
+  "framework": null
 }
 
