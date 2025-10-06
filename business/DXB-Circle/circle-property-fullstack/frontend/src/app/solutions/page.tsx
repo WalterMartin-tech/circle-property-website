@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import ThreeDoorSolutions from '@/components/ThreeDoorSolutions'
 
 export const metadata: Metadata = {
-  title: 'Solutions - Circle Property',
+  title: 'Solutions - Beechford Estate Office',
   description: 'Our business model and specialized approaches for HNWI investors, property owners, and developers in Dubai.',
 }
 

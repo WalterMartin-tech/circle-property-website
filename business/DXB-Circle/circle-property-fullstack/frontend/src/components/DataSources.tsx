@@ -70,7 +70,7 @@ export default function DataSources() {
       coverage: 'All properties with DEWA accounts'
     },
     {
-      name: 'Circle Property Network',
+      name: 'Beechford Estate Office Network',
       type: 'Proprietary',
       description: 'Direct broker relationships, off-market deals, and exclusive insights',
       updateFrequency: 'Real-time',

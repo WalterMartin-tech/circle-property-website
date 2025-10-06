@@ -325,7 +325,7 @@ export default function ConsultationModal({ isOpen, onClose, consultationType = 
                     <div className="bg-slate-50 rounded-lg p-4">
                       <p className="text-sm text-slate-600">
                         By submitting this form, you agree to our privacy policy and consent to being contacted 
-                        by Circle Property regarding your consultation request. We respect your privacy and will 
+                        by Beechford Estate Office regarding your consultation request. We respect your privacy and will 
                         never share your information with third parties.
                       </p>
                     </div>

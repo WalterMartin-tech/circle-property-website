@@ -6,7 +6,7 @@ import AISnaggingTool from '@/components/AISnaggingTool'
 import PortfolioCockpit from '@/components/PortfolioCockpit'
 
 export const metadata: Metadata = {
-  title: 'Tools & Calculators - Circle Property',
+  title: 'Tools & Calculators - Beechford Estate Office',
   description: 'Interactive Dubai property calculators including yield estimators, TCO calculators, and portfolio management tools.',
 }
 
@@ -115,7 +115,7 @@ export default function ToolsPage() {
                     <strong>Current Provider:</strong> Enter your existing management fees, cleaning costs, and vacancy rates
                   </div>
                   <div>
-                    <strong>Comparison:</strong> See Circle Property's optimized model with included services and improved performance
+                    <strong>Comparison:</strong> See Beechford Estate Office's optimized model with included services and improved performance
                   </div>
                   <div>
                     <strong>Analysis:</strong> Get break-even timeline, annual savings, and 3-year net benefit projections

@@ -134,7 +134,7 @@ export default function SubscriptionModal({ isOpen, onClose }: SubscriptionModal
                   {isSubmitted ? (
                     <div className="text-center">
                       <CheckCircleIcon className="mx-auto h-16 w-16 text-green-500 mb-6" />
-                      <h2 className="text-2xl font-bold text-slate-900 mb-2">Welcome to Circle Property!</h2>
+                      <h2 className="text-2xl font-bold text-slate-900 mb-2">Welcome to Beechford Estate Office!</h2>
                       <p className="text-slate-600 mb-6">
                         Thank you for subscribing. You'll receive market insights and exclusive opportunities directly in your inbox.
                       </p>
@@ -143,7 +143,7 @@ export default function SubscriptionModal({ isOpen, onClose }: SubscriptionModal
                         <ul className="text-sm text-green-800 space-y-1 text-left">
                           <li>• Weekly market intelligence reports</li>
                           <li>• Access to quiet listings and off-market opportunities</li>
-                          <li>• Exclusive invitations to Circle Property events</li>
+                          <li>• Exclusive invitations to Beechford Estate Office events</li>
                           <li>• Priority access to new tools and services</li>
                         </ul>
                       </div>
@@ -160,7 +160,7 @@ export default function SubscriptionModal({ isOpen, onClose }: SubscriptionModal
                       <div className="mb-6">
                         <h2 className="text-2xl font-bold text-slate-900 mb-2">Stay Informed</h2>
                         <p className="text-slate-600">
-                          Subscribe for market insights and access all Circle Property services seamlessly.
+                          Subscribe for market insights and access all Beechford Estate Office services seamlessly.
                         </p>
                       </div>
 
@@ -249,7 +249,7 @@ export default function SubscriptionModal({ isOpen, onClose }: SubscriptionModal
                             className="mt-1 h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500 flex-shrink-0"
                           />
                           <label htmlFor="termsAgreed" className="text-sm text-slate-700 leading-relaxed">
-                            I agree to receive market updates and communications from Circle Property. <span className="text-red-500">*</span>
+                            I agree to receive market updates and communications from Beechford Estate Office. <span className="text-red-500">*</span>
                           </label>
                         </div>
                       </div>

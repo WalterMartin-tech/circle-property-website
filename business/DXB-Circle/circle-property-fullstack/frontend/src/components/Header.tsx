@@ -31,7 +31,7 @@ export default function Header() {
               href="/"
               className="text-xl font-bold gradient-text hover:opacity-80 transition-opacity"
             >
-              Circle Property
+              Beechford Estate Office
             </Link>
           </div>
 

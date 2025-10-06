@@ -1,0 +1,1 @@
+import { api } from './client';import { DealPickerRequestT } from '../schemas/dealPicker';import { DealPickerResponse } from '../schemas/dealPicker';export async function optimizeDealPicker(payload: DealPickerRequestT){const res=await api<unknown>('/deal-picker/optimize',{method:'POST',body:JSON.stringify(payload)});return DealPickerResponse.parse(res);}

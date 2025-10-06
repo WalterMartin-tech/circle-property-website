@@ -1,0 +1,1 @@
+import { ReactNode } from 'react';export function FormField({label,hint,children}:{label:string;hint?:string;children:ReactNode}){return(<label className='block space-y-1'><span className='text-sm font-medium'>{label}</span>{children}{hint?<span className='text-xs text-gray-500'>{hint}</span>:null}</label>);}

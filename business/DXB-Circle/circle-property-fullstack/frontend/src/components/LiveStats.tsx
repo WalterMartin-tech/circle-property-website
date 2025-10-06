@@ -214,7 +214,7 @@ export default function LiveStats() {
                 <div className="bg-blue-50 border-l-4 border-blue-600 p-6 rounded-r-lg">
                   <h4 className="text-lg font-semibold text-blue-900 mb-2">🛡️ Compliance & Licensing</h4>
                   <p className="text-blue-800 text-sm mb-2">
-                    Circle Property Ltd is licensed by Dubai Economic Department (DET) and regulated by RERA. 
+                    Beechford Estate Office Ltd is licensed by Dubai Economic Department (DET) and regulated by RERA. 
                     All data handling complies with UAE Data Protection Law and RERA disclosure requirements.
                   </p>
                   <p className="text-blue-700 text-xs">

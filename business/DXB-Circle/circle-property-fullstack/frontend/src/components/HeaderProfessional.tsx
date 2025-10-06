@@ -19,6 +19,11 @@ export default function HeaderProfessional() {
       subtitle: 'Customer benefits & conversion' 
     },
     { 
+      name: 'About', 
+      href: '/about', 
+      subtitle: 'Our approach & credentials' 
+    },
+    { 
       name: 'Invest', 
       href: '/invest', 
       subtitle: 'Strategies, tools & market data' 
@@ -32,6 +37,12 @@ export default function HeaderProfessional() {
       name: 'Develop', 
       href: '/develop', 
       subtitle: 'Absorption analytics & leasing' 
+    },
+    { 
+      name: 'Smart Plans', 
+      href: '/optimizations', 
+      subtitle: 'Consulting-grade modeling with full transparency',
+      highlight: true
     },
     { 
       name: 'Services', 
@@ -52,8 +63,8 @@ export default function HeaderProfessional() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <Link href="/" className="text-lg font-bold gradient-text hover:opacity-80 transition-opacity">
-              Circle Property
+            <Link href="/" className="text-lg font-bold gradient-text hover:opacity-80 transition-opacity tracking-tight">
+              Beechford Estate Office
             </Link>
           </div>
 
@@ -71,10 +82,17 @@ export default function HeaderProfessional() {
                   className={`px-3 py-2 rounded-md font-medium transition-all text-sm ${
                     pathname === item.href
                       ? 'bg-blue-50 text-blue-700 border border-blue-200'
+                      : item.highlight
+                      ? 'text-purple-700 hover:text-purple-900 hover:bg-purple-50 border border-purple-200'
                       : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                   }`}
                 >
                   {item.name}
+                  {item.highlight && (
+                    <span className="ml-1.5 text-xs bg-gradient-to-r from-purple-600 to-blue-600 text-white px-1.5 py-0.5 rounded-full">
+                      NEW
+                    </span>
+                  )}
                 </Link>
                 
                 {/* Hover Tooltip */}

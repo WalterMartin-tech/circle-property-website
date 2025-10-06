@@ -142,7 +142,7 @@ export default function SwitchCostCalculator() {
 
         {/* DXB Circle Comparison */}
         <div>
-          <h4 className="text-lg font-semibold text-slate-900 mb-4">Circle Property Model</h4>
+          <h4 className="text-lg font-semibold text-slate-900 mb-4">Beechford Estate Office Model</h4>
           <div className="space-y-4">
             <div className="bg-green-50 p-4 rounded-lg border border-green-200">
               <div className="grid grid-cols-2 gap-4 text-sm">
@@ -223,7 +223,7 @@ export default function SwitchCostCalculator() {
 
           {/* DXB Circle Costs */}
           <div className="bg-green-50 p-6 rounded-lg border border-green-200">
-            <h5 className="font-semibold text-green-900 mb-4">Circle Property Costs</h5>
+            <h5 className="font-semibold text-green-900 mb-4">Beechford Estate Office Costs</h5>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <span className="text-green-700">Management</span>

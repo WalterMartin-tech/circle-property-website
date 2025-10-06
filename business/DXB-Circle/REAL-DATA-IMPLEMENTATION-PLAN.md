@@ -1,4 +1,6 @@
-button# Real Data Implementation Roadmap
+button09:33:39.329  ⚠ `devIndicators.buildActivity` is deprecated and no longer configurable. Please remove it from next.config.ts.
+09:33:39.330  ⚠ `devIndicators.buildActivityPosition` has been renamed to `devIndicators.position`. Please update your next.config.ts file accordingly.
+09:33:39.341  ⚠ The `devIndicators` option `buildActivityPosition` ("bottom-right") conflicts with `position` ("bottom-left"). Using `buildActivityPosition` ("bottom-right") for backward compatibility.# Real Data Implementation Roadmap
 
 ## Phase 1: Backend Data Infrastructure (Weeks 1-2)
 

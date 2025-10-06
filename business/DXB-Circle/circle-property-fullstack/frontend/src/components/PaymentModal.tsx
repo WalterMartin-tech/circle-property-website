@@ -312,7 +312,7 @@ export default function PaymentModal({ isOpen, onClose, serviceTier }: PaymentMo
                           <h3 className="text-lg font-semibold text-blue-900 mb-4">Bank Transfer Details</h3>
                           <div className="space-y-2 text-sm">
                             <div><strong>Bank:</strong> Emirates NBD</div>
-                            <div><strong>Account Name:</strong> Circle Property Management LLC</div>
+                            <div><strong>Account Name:</strong> Beechford Estate Office Management LLC</div>
                             <div><strong>IBAN:</strong> AE07 0260 0010 0000 1234567</div>
                             <div><strong>SWIFT:</strong> EBILAEAD</div>
                             <div><strong>Reference:</strong> {serviceTier.name}-{Date.now().toString().slice(-6)}</div>

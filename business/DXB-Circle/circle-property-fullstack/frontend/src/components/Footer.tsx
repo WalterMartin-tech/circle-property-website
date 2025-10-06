@@ -16,10 +16,10 @@ export default function Footer() {
             
             {/* Company Info */}
             <div>
-              <h3 className="text-xl font-bold mb-6">Circle Property</h3>
+              <h3 className="text-xl font-bold mb-6">Beechford Estate Office</h3>
               <p className="text-slate-300 mb-6 leading-relaxed">
-                Evidence-driven Dubai property decisions with transparent economics, 
-                one-window execution, and ongoing performance management.
+                Discreet property services with institutional-grade analytics. 
+                Evidence-driven decisions, integrated execution, and ongoing portfolio management.
               </p>
               <button
                 onClick={() => setIsSubscriptionModalOpen(true)}
@@ -36,6 +36,12 @@ export default function Footer() {
                 <li><a href="/" className="text-slate-300 hover:text-white transition-colors">Home</a></li>
                 <li><a href="/market-intelligence" className="text-slate-300 hover:text-white transition-colors">Market Intelligence</a></li>
                 <li><a href="/strategy-playbooks" className="text-slate-300 hover:text-white transition-colors">Strategy Playbooks</a></li>
+                <li><a href="/optimizations" className="text-slate-300 hover:text-white transition-colors flex items-center gap-2">
+                  Smart Plans
+                  <span className="text-xs bg-gradient-to-r from-purple-600 to-blue-600 text-white px-1.5 py-0.5 rounded-full">
+                    NEW
+                  </span>
+                </a></li>
                 <li><a href="/tools" className="text-slate-300 hover:text-white transition-colors">Tools & Calculators</a></li>
                 <li><a href="/services" className="text-slate-300 hover:text-white transition-colors">Services</a></li>
                 <li><a href="/case-studies" className="text-slate-300 hover:text-white transition-colors">Case Studies</a></li>
@@ -76,8 +82,8 @@ export default function Footer() {
                 </div>
                 <div className="flex items-center">
                   <EnvelopeIcon className="w-5 h-5 text-slate-600 mr-3 flex-shrink-0" />
-                  <a href="mailto:partners@circleproperty.com" className="text-slate-300 hover:text-white transition-colors">
-                    partners@circleproperty.com
+                  <a href="mailto:partners@beechfordestates.com" className="text-slate-300 hover:text-white transition-colors">
+                    partners@beechfordestates.com
                   </a>
                 </div>
               </div>
@@ -174,13 +180,13 @@ export default function Footer() {
 
             <div className="border-t border-slate-800 pt-6 mt-8 text-center">
               <p className="text-slate-300 text-sm">
-                © 2025 Circle Property Management LLC. All rights reserved. | 
+                © 2025 Beechford Estate Office LLC. All rights reserved. | 
                 <a href="/privacy" className="hover:text-slate-300 transition-colors ml-1">Privacy Policy</a> | 
                 <a href="/terms" className="hover:text-slate-300 transition-colors ml-1">Terms of Service</a> | 
                 <a href="/cookies" className="hover:text-slate-300 transition-colors ml-1">Cookie Policy</a>
               </p>
               <p className="text-slate-500 text-xs mt-2">
-                Website design and development by Circle Property Digital Team. 
+                Website design and development by Beechford Estate Office. 
                 Data provided by multiple sources - see individual pages for attribution.
               </p>
             </div>

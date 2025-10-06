@@ -17,7 +17,7 @@ export default function AboutPage() {
     document.body.removeChild(link)
     
     // Show download notification
-    alert('Downloading Circle Property Credentials (1.2 MB)...')
+    alert('Downloading Beechford Estate Office Credentials (1.2 MB)...')
   }
   return (
     <main className="min-h-screen bg-slate-50">
@@ -25,14 +25,14 @@ export default function AboutPage() {
       <section className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white py-20">
         <div className="container mx-auto px-6 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">
-            About <span className="gradient-text">Circle Property</span>
+            About <span className="gradient-text">Beechford Estate Office</span>
           </h1>
           <p className="text-xl text-slate-300 mb-8 max-w-3xl mx-auto">
-            Discreet credibility. Evidence-based decisions. One-window execution.
-            Your trusted partner in Dubai's dynamic property market.
+            Traditional estate office values, powered by modern analytics.
+            Serving discerning families and institutions with discreet, evidence-based property services.
           </p>
           <div className="inline-flex items-center px-4 py-2 bg-slate-800/50 border border-slate-600 rounded-full text-slate-300 text-sm">
-            Est. 2019 • RERA Licensed • DET Compliant
+            Est. 2019 • RERA Licensed • DET Compliant • Escrow Protected
           </div>
         </div>
       </section>
@@ -41,24 +41,25 @@ export default function AboutPage() {
         {/* Our Approach */}
         <section className="mb-20">
           <div className="max-w-4xl mx-auto bg-white rounded-xl p-12 border border-slate-200 shadow-sm">
-            <h2 className="text-3xl font-bold text-slate-900 mb-8 text-center">Our Approach</h2>
-            <div className="space-y-6 text-slate-700 leading-relaxed">
+            <h2 className="text-3xl font-bold text-slate-900 mb-8 text-center">Our Philosophy</h2>
+            <div className="space-y-6 text-slate-700 leading-relaxed text-center">
               <p className="text-lg">
-                Circle Property was founded on the principle that property investment should be 
-                <strong className="text-slate-900"> evidence-driven, not emotion-driven</strong>. We provide 
-                institutional-grade analysis with boutique service levels, serving discerning investors 
-                who demand transparency and measurable results.
+                Beechford Estate Office was established to serve families and institutions who seek 
+                <strong className="text-slate-900"> the discretion of a private office combined with institutional-grade analytics</strong>. 
+                We believe property investment should be evidence-driven, not emotion-driven, with every decision 
+                supported by transparent methodology and rigorous analysis.
               </p>
               <p className="text-lg">
-                Our <strong className="text-slate-900">"one-window" approach</strong> means you work with a single, 
+                Our <strong className="text-slate-900">integrated approach</strong> means you work with a single, 
                 dedicated team from initial strategy through ongoing portfolio management. No handoffs, 
-                no gaps, no surprises. We believe in building long-term relationships based on trust, 
-                performance, and absolute discretion.
+                no gaps, no surprises. We build <strong className="text-slate-900">multi-generational relationships</strong> based on trust, 
+                performance, and absolute confidentiality.
               </p>
               <p className="text-lg">
-                Unlike traditional property consultancies that focus on transaction volume, we optimize for 
-                <strong className="text-slate-900"> net returns and capital preservation</strong>. Every recommendation 
-                is backed by real-time market data, transparent assumptions, and clear risk assessments.
+                Unlike volume-focused brokerages, we optimize for 
+                <strong className="text-slate-900"> sustainable returns and capital preservation</strong>. Each recommendation 
+                is backed by real-time market intelligence, transparent assumptions, and comprehensive risk assessments — 
+                the same standards you'd expect from private banking or institutional asset management.
               </p>
             </div>
           </div>
@@ -97,10 +98,10 @@ export default function AboutPage() {
               <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-6">
                 <BuildingOfficeIcon className="w-6 h-6 text-purple-600" />
               </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-4">Long-Term Partnership</h3>
+              <h3 className="text-xl font-bold text-slate-900 mb-4">Multi-Generational Service</h3>
               <p className="text-slate-700 leading-relaxed">
                 We're not transaction-focused. Our success is measured by your portfolio's 
-                long-term performance and the strength of our ongoing partnership.
+                long-term performance and the enduring strength of our family office-style relationships.
               </p>
             </div>
           </div>
@@ -113,23 +114,24 @@ export default function AboutPage() {
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
                 <MapIcon className="w-8 h-8 text-blue-600" />
               </div>
-              <h2 className="text-3xl font-bold text-slate-900 mb-6">Why We Focus on Dubai</h2>
-              <div className="space-y-4 text-slate-700 text-left">
+              <h2 className="text-3xl font-bold text-slate-900 mb-6">Why Dubai?</h2>
+              <div className="space-y-4 text-slate-700 text-center">
                 <p className="text-lg leading-relaxed">
-                  <strong className="text-slate-900">Dubai's property market</strong> offers unique opportunities: 
-                  zero capital gains tax, freehold ownership for internationals, and some of the world's 
-                  highest rental yields. However, it's also complex, fast-moving, and full of pitfalls for the unwary.
+                  <strong className="text-slate-900">Dubai's property market</strong> offers exceptional opportunities for 
+                  sophisticated investors: zero capital gains tax, freehold ownership for internationals, 
+                  high-quality infrastructure, and attractive yields. However, it's also nuanced, fast-moving, 
+                  and requires deep local knowledge to navigate successfully.
                 </p>
                 <p className="text-lg leading-relaxed">
-                  Our <strong className="text-slate-900">Dubai-exclusive focus</strong> means we understand every 
-                  nuance: from RERA regulations to developer track records, from visa implications to 
-                  neighborhood dynamics. This depth of local expertise is what separates institutional-grade 
-                  advice from generic property consultation.
+                  Our <strong className="text-slate-900">exclusive Dubai focus</strong> means we understand every 
+                  detail: regulatory frameworks, developer track records, visa implications, 
+                  neighborhood dynamics, and cultural considerations. This depth of specialization is what 
+                  distinguishes estate office-grade counsel from generic property services.
                 </p>
                 <p className="text-lg leading-relaxed">
-                  We've built the most comprehensive real-time database of Dubai property performance, 
-                  giving our clients an <strong className="text-slate-900">information advantage</strong> that 
-                  translates directly into superior investment outcomes.
+                  We maintain the most comprehensive proprietary database of Dubai property performance, 
+                  combining official data with our own research. This <strong className="text-slate-900">information advantage</strong> — 
+                  typically available only to institutional investors — is now accessible to our private clients.
                 </p>
               </div>
             </div>
@@ -139,9 +141,9 @@ export default function AboutPage() {
         {/* Our Team */}
         <section className="mb-20">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-slate-900 mb-4">Leadership Team</h2>
+            <h2 className="text-3xl font-bold text-slate-900 mb-4">Leadership</h2>
             <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-              Experienced professionals with deep Dubai market knowledge and institutional investment backgrounds.
+              Senior professionals with extensive Dubai market expertise and institutional asset management backgrounds.
             </p>
           </div>
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
@@ -210,10 +212,10 @@ export default function AboutPage() {
         {/* Contact CTA */}
         <section className="text-center">
           <div className="bg-gradient-to-r from-slate-900 to-slate-800 rounded-2xl p-12 text-white">
-            <h2 className="text-3xl font-bold mb-4">Ready to Work Together?</h2>
+            <h2 className="text-3xl font-bold mb-4">Begin a Conversation</h2>
             <p className="text-xl text-slate-300 mb-8 max-w-2xl mx-auto">
-              Experience the difference of evidence-based property investment with institutional-grade analysis 
-              and boutique service levels.
+              Experience estate office-grade service: discretion, institutional analytics, 
+              and multi-generational commitment to your family's property interests.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button 
